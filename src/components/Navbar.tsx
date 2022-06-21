@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 
 const Navbar = () => {
   
@@ -7,24 +9,24 @@ const Navbar = () => {
   }
 
   return (
-    <div className="navbar">
+    <nav className="navbar">
       <div id="logo">YorkvilleShop</div>
       <ul>
-          <li><a href="/Home">HOME</a></li>
+          <li><Link to="/">HOME</Link></li>
           <li id="shop-anchor">SHOP &#9660;
             <div id="shop-dropdown">
-              <a href="/Shop" onClick={() => handleBrand("All")}>All</a>
-              <a href="/Shop" onClick={() => handleBrand("Jordan")}>Jordan</a>
-              <a href="/Shop" onClick={() => handleBrand("Nike")}>Nike</a>
-              <a href="/Shop" onClick={() => handleBrand("Adidas")}>Adidas</a>
-              <a href="/Shop" onClick={() => handleBrand("Essentials")}>Essentials</a>
+              <Link to="/Shop" onClick={() => handleBrand("All")}>All</Link>
+              <Link to="/Shop" onClick={() => handleBrand("Jordan")}>Jordan</Link>
+              <Link to="/Shop" onClick={() => handleBrand("Nike")}>Nike</Link>
+              <Link to="/Shop" onClick={() => handleBrand("Adidas")}>Adidas</Link>
+              <Link to="/Shop" onClick={() => handleBrand("Essentials")}>Essentials</Link>
             </div>
         </li>
-          <li><a href="/Policies">POLICIES</a></li>
-          <li><a href="/Orders">ORDERS</a></li>
-          <li><a href="/Cart">CART</a></li>
+          <li><Link to="/Policies">POLICIES</Link></li>
+          <li><Link to="/Orders">ORDERS</Link></li>
+          <li><Link to="/Cart">CART</Link></li>
       </ul>
-    </div>
+    </nav>
   )
 }
 
