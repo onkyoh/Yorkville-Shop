@@ -1,11 +1,15 @@
 import { Link } from "react-router-dom"
 
+interface IProps {
+  setBrandChange:  React.Dispatch<React.SetStateAction<string>>
+}
 
-const Navbar = () => {
+const Navbar = ({setBrandChange}: IProps) => {
   
   const handleBrand = (chosenBrand: string) => {
     window.localStorage.setItem('brand', chosenBrand)
     console.log(chosenBrand)
+    setBrandChange(chosenBrand)
   }
 
   return (

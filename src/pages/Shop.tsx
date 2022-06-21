@@ -1,13 +1,6 @@
-import React, { FC, SetStateAction, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { db } from '../firebase-config'
 import { doc, getDoc } from '@firebase/firestore'
-
-
-
-interface ISize {
-    Quantity: number
-    Price: number
-}
 
 interface IProps {
   cart: {
@@ -19,6 +12,7 @@ interface IProps {
     img?: string
   }[];
   setCart: React.Dispatch<React.SetStateAction<IProps['cart']>>;
+  brandChange: string
 }
 
 interface ICurrentShoe {
@@ -39,7 +33,7 @@ interface IShopImages {
 
 
 
-const Shop = ({cart, setCart}: IProps) => {
+const Shop = ({cart, setCart, brandChange}: IProps) => {
 
   const [shop, setShop] = useState<string[]>([])
   const [sizes, setSizes] = useState<string[]>([])
@@ -83,7 +77,6 @@ const handleGetShop = async (chosenBrand: string) => {
 
   const handleShoeSelection = async (e: any) => {
     var stock: any;
-    const shoeClicked = e.target.innerHTML
     if (brand === "All") {
       const shoeName = e.target.innerHTML
       const nameArray = shoeName.split(" ")
@@ -161,13 +154,10 @@ useEffect(() => {
   }
   handleGetShop(chosenBrand!)
   setSingleFocus(false)
-}, [])
+}, [brandChange])
 
   return (
     <div className='shop'>
-
-    
-
         {singleFocus ? 
           <div id="single-focus-container">
             <div id="back-to-shop" onClick={() => setSingleFocus(false)}>Back</div>
@@ -181,8 +171,10 @@ useEffect(() => {
                   <button className="size-buttons" key={i} onClick={(e) => handleSizeDetails(e)}>{size}</button>
                 ))}
               </div>
-                {!currentShoe.size ? null :
-                  <button id="add-to-cart" onClick={handleAddToCart}>ADD TO CART</button>
+                {!currentShoe.size ? 
+                  <button className="add-to-cart inactive" >ADD TO CART</button> 
+                  :
+                  <button className="add-to-cart" onClick={handleAddToCart}>ADD TO CART</button>
                 }
             </div>
           </div> 

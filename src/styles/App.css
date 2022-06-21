@@ -245,7 +245,7 @@ body {
   text-align: center;
 }
 
-.shop #single-focus-container #content-container #add-to-cart {
+.shop #single-focus-container #content-container .add-to-cart {
   padding: 0.5em 1em;
   font-size: 1.3em;
   cursor: pointer;
@@ -257,8 +257,17 @@ body {
   transition: background-color 0.5s;
 }
 
-.shop #single-focus-container #content-container #add-to-cart:hover {
+.shop #single-focus-container #content-container .add-to-cart:hover {
   background-color: #960306;
+}
+
+.shop #single-focus-container #content-container .add-to-cart.inactive {
+  cursor: auto;
+  opacity: 0.5;
+}
+
+.shop #single-focus-container #content-container .add-to-cart.inactive:hover {
+  background-color: #d60407;
 }
 
 .shop #single-focus-container #content-container #size-container {

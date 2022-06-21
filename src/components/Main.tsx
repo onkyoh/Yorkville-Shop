@@ -17,15 +17,19 @@ interface ICart {
     setCart: React.Dispatch<React.SetStateAction<ICart['cart']>>;
   }
 
+  interface IProps {
+    brandChange: string
+  }
 
-const Main = () => {
+
+const Main = ({brandChange}: IProps) => {
 
     const [cart, setCart] = useState<ICart["cart"]>([])
 
   return (
     <Routes> {/* The Switch decides which component to show based on the current URL.*/}
       <Route path='/' element={<Home/>}></Route>
-      <Route path='/Shop' element={<Shop cart={cart} setCart={setCart}/>}></Route>
+      <Route path='/Shop' element={<Shop cart={cart} setCart={setCart} brandChange={brandChange}/>}></Route>
       <Route path='/Cart' element={<Cart cart={cart} setCart={setCart}/>}></Route>
       <Route path='/Orders' element={<Orders/>}></Route>
       <Route path='/Policies' element={<Policies/>}></Route>

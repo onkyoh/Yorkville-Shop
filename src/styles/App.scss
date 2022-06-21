@@ -161,7 +161,7 @@ body {
                 width: 100%;
                 text-align: center;
             }
-            #add-to-cart {
+            .add-to-cart {
                 padding: 0.5em 1em;
                 font-size: 1.3em;
                 cursor: pointer;
@@ -172,6 +172,13 @@ body {
                 transition: background-color 0.5s;
                 &:hover {
                     background-color: $dark-red;
+                }
+            }
+            .add-to-cart.inactive {
+                cursor: auto;
+                opacity: 0.5;
+                &:hover {
+                    background-color: $base-red;
                 }
             }
             #size-container {
