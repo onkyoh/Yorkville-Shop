@@ -1,0 +1,298 @@
+@import url("https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  color: #010A10;
+  font-family: 'Titillium Web', sans-serif;
+}
+
+body {
+  background-color: #FFFBF2;
+}
+
+.navbar {
+  position: fixed;
+  height: 75px;
+  width: 100vw;
+  top: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 0 5%;
+  background-color: #d60407;
+  -webkit-box-shadow: 0px 0px 16px grey;
+          box-shadow: 0px 0px 16px grey;
+}
+
+.navbar #logo {
+  color: #FFFBF2;
+  font-size: 2em;
+}
+
+.navbar ul {
+  list-style: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 100%;
+}
+
+.navbar ul li {
+  height: 100%;
+  color: #FFFBF2;
+  padding: 0 1.5em;
+  -webkit-transition: background-color 0.5s;
+  transition: background-color 0.5s;
+}
+
+.navbar ul li:hover {
+  background-color: #960306;
+}
+
+.navbar ul a {
+  text-decoration: none;
+  color: #FFFBF2;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.navbar ul #shop-anchor {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.navbar ul #shop-anchor #shop-dropdown {
+  position: absolute;
+  top: 75px;
+  border: 2px solid #d60407;
+  border-top: none;
+  width: 200px;
+  display: none;
+}
+
+.navbar ul #shop-anchor #shop-dropdown a {
+  font-size: 1.2em;
+  color: #010A10;
+  background-color: #FFFBF2;
+  -webkit-transition: background-color 0.5s, color 0.5s;
+  transition: background-color 0.5s, color 0.5s;
+  padding: 0.5em 1em;
+}
+
+.navbar ul #shop-anchor #shop-dropdown a:hover {
+  background-color: #d60407;
+  color: #FFFBF2;
+}
+
+.navbar ul #shop-anchor:hover #shop-dropdown {
+  display: block;
+}
+
+.page {
+  padding-top: 75px;
+}
+
+.shop {
+  max-width: 100vw;
+  padding: 2em;
+  padding-top: calc(75px + 2em);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 2em;
+}
+
+.shop .item-container {
+  width: calc(clamp(300px, 30vw, 400px));
+  aspect-ratio: 1/1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background-color: #e9e8e8;
+}
+
+.shop .item-container p {
+  font-size: calc(clamp(1.1em, 3vw, 1.3em));
+  width: 100%;
+  padding: 1em 0.5em;
+  background-color: #FFFBF2;
+  cursor: pointer;
+}
+
+.shop .item-container img {
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.shop #single-focus-container {
+  background-color: #FFFBF2;
+  background: repeating-linear-gradient(-45deg, #d60407, #d60407 5px, #FFFBF2 5px, #FFFBF2 50px);
+  width: 100vw;
+  height: calc(100vh - 145px);
+}
+
+.shop #single-focus-container #content-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 40px;
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 37.5px);
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: calc(clamp(300px, 80vw, 500px));
+  height: calc(min(600px, 80vh));
+  background-color: #FFFBF2;
+  -webkit-box-shadow: 0px 0px 16px gray;
+          box-shadow: 0px 0px 16px gray;
+  border-radius: 2%;
+}
+
+.shop #single-focus-container #content-container #p-img-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+  gap: 1vh;
+  overflow: hidden;
+}
+
+.shop #single-focus-container #content-container img {
+  border: 10px double #d60407;
+  border-radius: 5%;
+  width: 70%;
+}
+
+.shop #single-focus-container #content-container p {
+  font-size: 1.5em;
+  width: 100%;
+  text-align: center;
+}
+
+.shop #single-focus-container #content-container #add-to-cart {
+  padding: 0.5em 1em;
+  font-size: 1.3em;
+  cursor: pointer;
+  border: none;
+  background-color: #d60407;
+  color: #FFFBF2;
+  border-radius: 5px;
+  -webkit-transition: background-color 0.5s;
+  transition: background-color 0.5s;
+}
+
+.shop #single-focus-container #content-container #add-to-cart:hover {
+  background-color: #960306;
+}
+
+.shop #single-focus-container #content-container #size-container {
+  width: 80%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 5px;
+}
+
+.shop #single-focus-container #content-container #size-container .size-buttons {
+  width: 75px;
+  aspect-ratio: 2/1;
+  font-size: 1.3em;
+  cursor: pointer;
+  border: none;
+  background-color: #FFFBF2;
+  color: #010A10;
+  -webkit-transition: background-color 0.5s, color 0.25s;
+  transition: background-color 0.5s, color 0.25s;
+  border: #d60407 2px solid;
+  border-radius: 5px;
+}
+
+.shop #single-focus-container #content-container #size-container .size-buttons:hover {
+  color: #FFFBF2;
+  background-color: #d60407;
+}
+/*# sourceMappingURL=App.css.map */

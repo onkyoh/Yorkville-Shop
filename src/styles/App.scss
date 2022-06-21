@@ -1,0 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400&display=swap');
+
+@mixin flexCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+$base-red: #d60407;
+$dark-red: #960306;
+$base-black: #010A10;
+$base-white: #FFFBF2;
+$base-gray: #e9e8e8;
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: $base-black;
+    font-family: 'Titillium Web', sans-serif;
+}
+
+body {
+    background-color: $base-white;
+}
+
+.navbar {
+    position: fixed;
+    height: 75px;
+    width: 100vw;
+    top: 0;
+    @include flexCenter();
+    justify-content: space-between;
+    padding: 0 5%;
+    background-color: $base-red;
+    box-shadow: 0px 0px 16px grey;
+    #logo {
+        color: $base-white;
+        font-size: 2em;
+    }
+    ul {
+        list-style: none;
+        @include flexCenter();
+        height: 100%;
+        li {
+            height: 100%;
+            color: $base-white;
+            padding: 0 1.5em;
+            transition: background-color 0.5s;
+            &:hover {
+               background-color: $dark-red;
+            }
+        }
+        a {
+            text-decoration: none;
+            color: $base-white;
+            height: 100%;
+            @include flexCenter();
+        }
+        #shop-anchor {
+            @include flexCenter();
+            #shop-dropdown {
+                position: absolute;
+                top: 75px;
+                border: 2px solid $base-red;
+                border-top: none;
+                width: 200px;
+                display: none;
+              
+                a {
+                    font-size: 1.2em;
+                    color: $base-black;
+                    background-color: $base-white;
+                    transition: background-color 0.5s, color 0.5s;
+                    padding: 0.5em 1em;
+                    &:hover {
+                        background-color: $base-red;
+                        color: $base-white;
+                    }
+                }
+            }
+            &:hover {
+                #shop-dropdown {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+.page {
+    padding-top: 75px;
+}
+
+.shop {
+    max-width: 100vw;
+    padding: 2em;
+    padding-top: calc(75px + 2em);
+    @include flexCenter();
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2em;
+    .item-container {
+        width: calc(clamp(300px, 30vw, 400px));
+        aspect-ratio: 1/1;
+        @include flexCenter();
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: $base-gray;
+        p {
+            font-size: calc(clamp(1.1em, 3vw, 1.3em));
+            width: 100%;
+            padding: 1em 0.5em;
+            background-color: $base-white;
+            cursor: pointer;
+        }
+        img {
+            width: 100%;
+            aspect-ratio: 1/1;
+
+        }
+    }
+    #single-focus-container {
+        background-color: $base-white;
+        background: repeating-linear-gradient( -45deg, $base-red, $base-red 5px,$base-white 5px, $base-white 50px );
+        width: 100vw;
+        height: calc(100vh - 145px);
+        #back-to-shop {
+
+        }
+        #content-container{
+            @include flexCenter();
+            flex-direction: column;
+            gap: 40px;
+            position: absolute;
+            left: 50%;
+            top: calc(50% + 37.5px);
+            transform: translate(-50%, -50%);
+            width: calc(clamp(300px, 80vw, 500px));
+            height: calc(min(600px, 80vh));
+            background-color: $base-white;
+            box-shadow: 0px 0px 16px gray;
+            border-radius: 2%;
+          
+            #p-img-container {
+                @include flexCenter();
+                flex-direction: column;
+                width: 100%;
+                gap: 1vh;
+                overflow: hidden;
+            }
+            img {
+                border: 10px double $base-red;
+                border-radius: 5%;
+                width: 70%;
+            }
+            p {
+                font-size: 1.5em;
+                width: 100%;
+                text-align: center;
+            }
+            #add-to-cart {
+                padding: 0.5em 1em;
+                font-size: 1.3em;
+                cursor: pointer;
+                border: none;
+                background-color: $base-red;
+                color: $base-white;
+                border-radius: 5px;
+                transition: background-color 0.5s;
+                &:hover {
+                    background-color: $dark-red;
+                }
+            }
+            #size-container {
+                width: 80%;
+                @include flexCenter();
+                flex-wrap: wrap;
+                gap: 5px;
+                .size-buttons {
+                    width: 75px;
+                    aspect-ratio: 2/1;
+                    font-size: 1.3em;
+                    cursor: pointer;
+                    border: none;
+                    background-color: $base-white;
+                    color: $base-black;
+                    transition: background-color 0.5s, color 0.25s;
+                    border: #d60407 2px solid;
+                    border-radius: 5px;
+                    &:hover {
+                        color: $base-white;
+                        background-color: $base-red;
+                    }
+                }
+            }
+        }
+        
+        
+    }
+  
+}
+
