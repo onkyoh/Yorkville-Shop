@@ -1,16 +1,25 @@
 import { Link } from "react-router-dom"
+import { signOut } from "firebase/auth";
+import { auth } from '../firebase-config'
 
 interface IProps {
   setBrandChange:  React.Dispatch<React.SetStateAction<string>>
+  currentUser: string
+  setCurrentUser: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Navbar = ({setBrandChange}: IProps) => {
+const Navbar = ({setBrandChange, currentUser, setCurrentUser}: IProps) => {
   
   const handleBrand = (chosenBrand: string) => {
     window.localStorage.setItem('brand', chosenBrand)
     console.log(chosenBrand)
     setBrandChange(chosenBrand)
   }
+
+  const logout = async () => {
+    await signOut(auth);
+    setCurrentUser('');
+}  
 
   return (
     <nav className="navbar">
@@ -29,6 +38,12 @@ const Navbar = ({setBrandChange}: IProps) => {
           <li><Link to="/Policies">POLICIES</Link></li>
           <li><Link to="/Orders">ORDERS</Link></li>
           <li><Link to="/Cart">CART</Link></li>
+          {currentUser ? 
+           <li><Link to="/" onClick={logout}>LOGOUT</Link></li>
+          :
+          <li><Link to="/Login">LOGIN</Link></li>
+          }
+         
       </ul>
     </nav>
   )

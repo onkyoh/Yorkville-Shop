@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { db } from '../firebase-config'
-import { doc, getDoc } from '@firebase/firestore'
+import { doc, getDoc, updateDoc } from '@firebase/firestore'
 
 interface IProps {
+  brandChange: string
+  currentUser: string
+}
+
+interface ICart {
   cart: {
     name: string
     size: string
@@ -11,8 +16,6 @@ interface IProps {
     maxQuantity: number
     img?: string
   }[];
-  setCart: React.Dispatch<React.SetStateAction<IProps['cart']>>;
-  brandChange: string
 }
 
 interface ICurrentShoe {
@@ -30,10 +33,7 @@ interface IShopImages {
 }
 
 
-
-
-
-const Shop = ({cart, setCart, brandChange}: IProps) => {
+const Shop = ({brandChange, currentUser}: IProps) => {
 
   const [shop, setShop] = useState<string[]>([])
   const [sizes, setSizes] = useState<string[]>([])
@@ -119,28 +119,40 @@ const handleGetShop = async (chosenBrand: string) => {
   const handleSizeDetails = (e: any) => {
     const idx = sizesDetail.findIndex((size: any) => size[0] === e.target.innerHTML)
     const sizeValues:any = Object.values(sizesDetail[idx])
-    console.log(sizeValues[1])
-
     setCurrentShoe(({...currentShoe, price: sizeValues[1].Price, maxQuantity: sizeValues[1].Quantity, size: sizeValues[0]}))
   }
 
-  const handleAddToCart = () => {
-    var tempCart: IProps['cart'] = cart
+  const handleAddToCart = async () => {
+    const usersRef = doc(db, 'users', currentUser)
+    const usersDoc: any = await getDoc(usersRef)
+    var tempCart: ICart['cart'] = usersDoc.data().cart
     let idx = tempCart.findIndex((item: ICurrentShoe) => item.name === currentShoe.name && item.size === currentShoe.size)
     if (idx > -1) {
+
       if (currentShoe.quantity === currentShoe.maxQuantity) {
           console.log("No more stock")
           return
         } else {
           currentShoe.quantity += 1;
-          tempCart[idx] = currentShoe
-          setCart([...tempCart])
+          let shoeToAdd = currentShoe
+          delete shoeToAdd.img
+           //add a currentShoe clone that doesnt have img parameter
+          //when imgs get added delete this
+           tempCart[idx] = shoeToAdd
+          await updateDoc(usersRef, {
+            cart: [...tempCart]
+          })
           console.log("item added to cart for non-initial time")
       }
     } else {
       currentShoe.quantity = 1
-      var newItemCart: IProps['cart'] = [...tempCart, currentShoe]
-      setCart([...newItemCart])
+      let shoeToAdd = currentShoe
+      delete shoeToAdd.img
+      //add a currentShoe clone that doesnt have img parameter
+      var newItemCart: ICart['cart'] = [...tempCart, shoeToAdd]
+      await updateDoc(usersRef, {
+        cart: [...newItemCart]
+      })
       console.log("trigged when item added for first time")
     }
   }
@@ -166,16 +178,20 @@ useEffect(() => {
                 <img src={currentShoe.img} alt="Shoe" />
                 <p>{currentShoe.name}</p>
               </div>
-              <div id="size-container">
-                {sizes.map((size: string, i: number) => (
-                  <button className="size-buttons" key={i} onClick={(e) => handleSizeDetails(e)}>{size}</button>
-                ))}
+              <div id="size-add-container">
+                <div id="size-container">
+                  {sizes.map((size: string, i: number) => (
+                    <button className="size-buttons" key={i} onClick={(e) => handleSizeDetails(e)}>{size}</button>
+                  // TODO: add href/active class to sizes
+                  ))}
+                
+                </div>
+                  {!currentShoe.size ? 
+                    <button className="add-to-cart inactive" >ADD TO CART</button> 
+                    :
+                    <button className="add-to-cart" onClick={handleAddToCart}>ADD TO CART</button>
+                  }
               </div>
-                {!currentShoe.size ? 
-                  <button className="add-to-cart inactive" >ADD TO CART</button> 
-                  :
-                  <button className="add-to-cart" onClick={handleAddToCart}>ADD TO CART</button>
-                }
             </div>
           </div> 
           :
@@ -187,10 +203,6 @@ useEffect(() => {
           )) 
           }
 
-      
-     {cart.map((item: any, i: number) => (
-        <div key={i}>Shoe: {item.name}, Size: {item.size}, Price: {item.price}, Quantity: {item.quantity}</div>
-      ))}
 
     </div>
   )
