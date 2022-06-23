@@ -33,6 +33,7 @@ const Navbar = ({setBrandChange, currentUser, setCurrentUser}: IProps) => {
               <Link to="/Shop" onClick={() => handleBrand("Nike")}>Nike</Link>
               <Link to="/Shop" onClick={() => handleBrand("Adidas")}>Adidas</Link>
               <Link to="/Shop" onClick={() => handleBrand("Essentials")}>Essentials</Link>
+              <Link to="/Shop" onClick={() => handleBrand("Test")}>Test</Link>
             </div>
         </li>
           <li><Link to="/Policies">POLICIES</Link></li>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { db } from '../firebase-config'
 import { doc, getDoc, updateDoc } from '@firebase/firestore'
 
@@ -155,6 +155,7 @@ const handleGetShop = async (chosenBrand: string) => {
       })
       console.log("trigged when item added for first time")
     }
+    //after adding to cart clicking another size = no img
   }
 
 useEffect(() => {

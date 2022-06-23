@@ -11,6 +11,7 @@ $dark-red: #960306;
 $base-black: #010A10;
 $base-white: #FFFBF2;
 $base-gray: #e9e8e8;
+$base-gold: #FFD700;
 
 
 
@@ -24,6 +25,7 @@ $base-gray: #e9e8e8;
 
 body {
     background-color: $base-white;
+    background: url("../pictures/yorkville\ checkout\ background.jpg");
 }
 
 .navbar {
@@ -34,11 +36,13 @@ body {
     @include flexCenter();
     justify-content: space-between;
     padding: 0 5%;
-    background-color: $base-red;
-    box-shadow: 0px 0px 16px grey;
+    background-color: rgba(255, 255, 255, .15);  
+    backdrop-filter: blur(7.5px);
+    box-shadow: 0px 0px 16px black;
+
     #logo {
         color: $base-white;
-        font-size: 2em;
+        font-size: 1.3em;
     }
     ul {
         list-style: none;
@@ -46,42 +50,50 @@ body {
         height: 100%;
         li {
             height: 100%;
+            width: 120px;
             color: $base-white;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-shadow: 1px 1px 1px black;
             padding: 0 1.5em;
             transition: background-color 0.5s;
             &:hover {
-               background-color: $dark-red;
+                background-color: rgba(0, 0, 0, 0.2);  
             }
-        }
-        a {
-            text-decoration: none;
-            color: $base-white;
-            height: 100%;
-            @include flexCenter();
+            a {
+                text-decoration: none;
+                color: $base-white;
+                font-weight: bold;
+                text-shadow: 1px 1px 1px black;
+                height: 100%;
+                @include flexCenter();
+                
+            }
         }
         #shop-anchor {
             @include flexCenter();
+            width: 120px;
             #shop-dropdown {
+                display: none;
                 position: absolute;
                 top: 75px;
-                border: 2px solid $base-red;
-                border-top: none;
                 width: 200px;
-                display: none;
-              
+                background-color: rgba(255, 255, 255, .15);  
+                backdrop-filter: blur(7.5px);
                 a {
                     font-size: 1.2em;
-                    color: $base-black;
-                    background-color: $base-white;
-                    transition: background-color 0.5s, color 0.5s;
+                    color: $base-white;
                     padding: 0.5em 1em;
+                    background-color: rgba(255, 255, 255, .10);  
+                    backdrop-filter: blur(7.5px);
+                    transition: background-color 0.5s, opacity 0.5s;
                     &:hover {
-                        background-color: $base-red;
-                        color: $base-white;
+                        background-color: rgba(21, 22, 22, 0.37)
                     }
                 }
             }
             &:hover {
+                background-color: rgba(0, 0, 0, 0.2);  
                 #shop-dropdown {
                     display: block;
                 }
@@ -100,6 +112,7 @@ body {
     padding-top: 75px;
     @include flexCenter();
     justify-content: space-around;
+    gap: 35px;
     flex-wrap: wrap;
     .item-container {
         width: calc(clamp(300px, 30vw, 400px));
@@ -108,7 +121,8 @@ body {
         flex-direction: column;
         justify-content: space-between;
         background-color: $base-gray;
-        margin-bottom: 35px;
+      
+        box-shadow: 0px 0px 16px $base-black;
         p {
             font-size: calc(clamp(1.1em, 3vw, 1.2em));
             width: 100%;
@@ -138,7 +152,7 @@ body {
             top: calc(50% + 37.5px);
             width: calc(min(90%, 1000px));
             transform: translate(-50%, -50%);
-            padding: 2% 0;
+            padding: 1em 0;
             background-color: rgba(255, 255, 255, .15);  
             backdrop-filter: blur(7.5px);
             box-shadow: 0px 0px 16px gray;
@@ -146,18 +160,18 @@ body {
             #p-img-container {
                 @include flexCenter();
                 flex-direction: column;
-                width: calc(min(50%, 450px));
+                width: calc(clamp(300px, 50%, 450px));
                 gap: 1vh;
             }
             img {
                 width: 80%;
-                border: inset 2px gray;
-                border-radius: 15px;
+                box-shadow: 2px 2px 8px $base-black, -2px -2px 8px $base-gray;
             }
             p {
-                font-size: 1.5em;
+                font-size: calc(clamp(1.2em, 3vw, 1.5em));
                 width: 100%;
                 text-align: center;
+                color: $base-white
             }
             #size-add-container {
                 @include flexCenter();
@@ -167,7 +181,7 @@ body {
             }
             .add-to-cart {
                 padding: 0.5em 1em;
-                font-size: 1.3em;
+                font-size: calc(clamp(1em, 2vw, 1.3em));
                 cursor: pointer;
                 border: none;
                 background-color: $base-red;
@@ -220,42 +234,58 @@ body {
     width: 100vw;
     .form-container {
         padding: 2em;
-        border: 2px solid $base-gray;
-        box-shadow: 0px 0px 16px $base-gray;
+        box-shadow: 0px 0px 16px $base-black;
         width: calc(clamp(300px, 50vw , 500px));
+        background-color: rgba(255, 255, 255, .15);  
+        backdrop-filter: blur(7.5px);
+        border-radius: 15px;
         form {
             @include flexCenter();
             flex-direction: column;
             h2 {
-                color: $base-red;
+                color: $base-white;
                 font-size: 2em;
                 margin-bottom: 0.5em;
+                background: none;
             }
             label {
                 font-size: 1.3em;
                 width: 80%;
+                color: $base-white;
             }
             input {
                 width: 80%;
                 height: 3em;
                 padding-left: 1em;
                 font-size: 1em;
-                border: 2px solid $base-gray;
-                border-radius: 5px;
+                border-radius: 15px;
                 margin-bottom: 1.3em;
+                color: white;
+                border: none;
+                background: none;
+                box-shadow: inset 2px 2px 10px $base-black, inset -2px -2px 10px $base-gray;
+                &:focus {
+                    outline: none;
+                }
             }
             button {
                 padding: 0.5em 1.3em;
                 font-size: 1.2em;
                 cursor: pointer;
                 border: none;
-                background-color: $base-red;
-                color: $base-white;
+                background-color: $base-gray;
+                color: $base-black;
                 border-radius: 5px;
                 margin-bottom: 1.3em;
+                transition: background-color 0.5s;
+                box-shadow: 0px 0px 8px $base-black;
+                
+                &:hover {
+                    background-color: $base-white;
+                }
             }
             span {
-                color: $base-red;
+                color: $base-white;
                 cursor: pointer;
             }
         }
@@ -276,26 +306,30 @@ body {
         li {
             @include flexCenter();
             justify-content: space-between;
-            border-bottom: 2px solid $base-gray;
+            margin: 2em;
             padding: 1.5em;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, .15);  
+            backdrop-filter: blur(7.5px);
+            box-shadow: 0px 0px 16px $base-black;
             p {
-                font-size: 1em;
+                font-size: 1.2em;
                 width: 80%;
+                color: $base-white;
             }
             button {
                 @include flexCenter();
                 height: calc(clamp(40px, 8vw, 45px));
                 width: calc(clamp(40px, 8vw, 45px));
                 font-size:  calc(clamp(1.9em, 6vw, 2em));;
-                background-color: $base-white;
-                color: $base-red;
-                border: 2px solid $base-red;
-                border-radius: 5px;
+                background: none;
+                border: none;
+                color: $base-white;
+                font-weight: bolder;
                 transition: background-color 0.25s, color 0.25s;
                 cursor: pointer;
                 &:hover {
-                    background-color: $base-red;
-                    color: $base-white; 
+                    color: $base-red; 
                 }
             }
         }
@@ -305,6 +339,33 @@ body {
         width: 30%;
         height: 100%;
         border-left: 2px solid $base-black;
+        p {
+            color: $base-white;
+            font-size: 2em;
+        }   
+        button {
+            color: $base-black;
+            font-size: 2em;
+            display: block;
+            width: 100%;
+            height: fit-content;
+            cursor: pointer;
+        }
+    }
+}
+
+.orders {
+    padding-top: 75px;
+    li {
+        @include flexCenter();
+        justify-content: space-between;
+        margin: 2em;
+        padding: 1.5em;
+        border-radius: 15px;
+        background-color: rgba(255, 255, 255, .15);  
+        backdrop-filter: blur(7.5px);
+        box-shadow: 0px 0px 16px $base-black;
+        color: $base-white;
     }
 }
 
