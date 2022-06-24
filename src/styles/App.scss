@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tillana:wght@500&display=swap');
 
 @mixin flexCenter {
     display: flex;
@@ -109,7 +110,8 @@ body {
 .shop {
     width: 100%;
     height: 100%;
-    padding-top: 75px;
+    padding-top: 100px;
+    padding-bottom: 25px;
     @include flexCenter();
     justify-content: space-around;
     gap: 35px;
@@ -120,19 +122,25 @@ body {
         @include flexCenter();
         flex-direction: column;
         justify-content: space-between;
-        background-color: $base-gray;
-      
+        background-color: $base-white;
         box-shadow: 0px 0px 16px $base-black;
         p {
-            font-size: calc(clamp(1.1em, 3vw, 1.2em));
+            font-family: 'Tillana', cursive;
+            font-size: calc(clamp(1.1em, 3vw, 1.4em));
             width: 100%;
             padding: 1em 0.5em;
             background-color: $base-white;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; 
             cursor: pointer;
         }
         img {
-            width: 100%;
+            width: calc(100% - 3em);
             aspect-ratio: 1/1;
+            margin: 1.5em 1.5em 0 1.5em;
+            background-color: $base-gray;
         }
     }
     #single-focus-container {
@@ -297,10 +305,18 @@ body {
     @include flexCenter();
     height: 100vh;
     #cart-list {
-        width: 70%;
+        @include flexCenter();
+        justify-content: flex-start;
+        flex-direction: column;
+        width: 100%;
         height: 100%;
-        align-content: flex-start;
         overflow-y: auto;
+        padding-top: 25px;
+        #empty {
+            display: block;
+            color: $base-white;
+            font-size: 3em;
+        }
        ul {
         list-style: none;
         li {
@@ -336,20 +352,79 @@ body {
        }
     }
     #buy-container {
-        width: 30%;
+        width: 100%;
         height: 100%;
         border-left: 2px solid $base-black;
+        @include flexCenter();
         p {
             color: $base-white;
             font-size: 2em;
         }   
-        button {
-            color: $base-black;
-            font-size: 2em;
-            display: block;
-            width: 100%;
-            height: fit-content;
-            cursor: pointer;
+        #back-to-cart {
+            position: absolute;
+            top: 75px;
+            left: 0;
+        }
+        form {
+            @include flexCenter();
+            flex-direction: column;
+            width: calc(min(90%, 600px));
+            background-color: rgba(255, 255, 255, .15);  
+            backdrop-filter: blur(7.5px);
+            box-shadow: 0px 0px 8px $base-black;
+            border-radius: 15px;
+            padding: 2.5% 5%;
+            * {
+                margin-bottom: 5px;
+            }
+            h2 {
+                color: $base-white;
+                text-shadow: 0px 0px 4px $base-black;
+                margin-bottom: 1em;
+            }
+            label {
+                color: $base-white;
+                width: 100%;
+                font-size: 1.1em;
+            }
+            input[type='radio']{
+                align-self: flex-start;
+                position: relative;
+                transform: translate(0, 0.6em);
+            }
+            input[type='text'] {
+               width: 100%;
+               border-radius: 5px;
+               border: none;
+               padding-left: 1em;
+               font-size: 1.1em;
+               height: 2.5em; 
+            }
+            div {
+                @include flexCenter();
+                width: 100%;
+                gap: 15px;
+                div {
+                    @include flexCenter();
+                    flex-direction: column;
+                    width: 100%;
+                    gap: 0;
+                    input[type="text"] {
+                        width: 100%;
+                        padding-left: 1em;
+                        font-size: 1.1em;
+                        height: 2.5em;
+                     }
+                }
+            }
+            button {
+                color: $base-black;
+                font-size: 2em;
+                display: block;
+                width: 100%;
+                height: fit-content;
+                cursor: pointer;
+            }
         }
     }
 }

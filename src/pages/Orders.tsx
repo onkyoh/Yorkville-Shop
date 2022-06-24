@@ -39,8 +39,8 @@ const Orders = ({currentUser}: IProps) => {
       <div>No previous orders</div>  
         :
       <ul>
-        {orders.map((order: any, i: number) => (
-          <li key={i}>#: {order.id}, Price: {order.totalPrice}</li>
+        {orders.map((order: any) => (
+          <li key={order.id}>#: {order.id}, Price: ${order.totalPrice}</li>
         ))}
       </ul>
     }

@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Tillana:wght@500&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -143,7 +144,8 @@ body {
 .shop {
   width: 100%;
   height: 100%;
-  padding-top: 75px;
+  padding-top: 100px;
+  padding-bottom: 25px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -179,22 +181,29 @@ body {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  background-color: #e9e8e8;
+  background-color: #FFFBF2;
   -webkit-box-shadow: 0px 0px 16px #010A10;
           box-shadow: 0px 0px 16px #010A10;
 }
 
 .shop .item-container p {
-  font-size: calc(clamp(1.1em, 3vw, 1.2em));
+  font-family: 'Tillana', cursive;
+  font-size: calc(clamp(1.1em, 3vw, 1.4em));
   width: 100%;
   padding: 1em 0.5em;
   background-color: #FFFBF2;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
 }
 
 .shop .item-container img {
-  width: 100%;
+  width: calc(100% - 3em);
   aspect-ratio: 1/1;
+  margin: 1.5em 1.5em 0 1.5em;
+  background-color: #e9e8e8;
 }
 
 .shop #single-focus-container {
@@ -457,11 +466,32 @@ body {
 }
 
 .cart #cart-list {
-  width: 70%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
   height: 100%;
-  -ms-flex-line-pack: start;
-      align-content: flex-start;
   overflow-y: auto;
+  padding-top: 25px;
+}
+
+.cart #cart-list #empty {
+  display: block;
+  color: #FFFBF2;
+  font-size: 3em;
 }
 
 .cart #cart-list ul {
@@ -524,9 +554,18 @@ body {
 }
 
 .cart #buy-container {
-  width: 30%;
+  width: 100%;
   height: 100%;
   border-left: 2px solid #010A10;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .cart #buy-container p {
@@ -534,7 +573,109 @@ body {
   font-size: 2em;
 }
 
-.cart #buy-container button {
+.cart #buy-container #back-to-cart {
+  position: absolute;
+  top: 75px;
+  left: 0;
+}
+
+.cart #buy-container form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: calc(min(90%, 600px));
+  background-color: rgba(255, 255, 255, 0.15);
+  -webkit-backdrop-filter: blur(7.5px);
+          backdrop-filter: blur(7.5px);
+  -webkit-box-shadow: 0px 0px 8px #010A10;
+          box-shadow: 0px 0px 8px #010A10;
+  border-radius: 15px;
+  padding: 2.5% 5%;
+}
+
+.cart #buy-container form * {
+  margin-bottom: 5px;
+}
+
+.cart #buy-container form h2 {
+  color: #FFFBF2;
+  text-shadow: 0px 0px 4px #010A10;
+  margin-bottom: 1em;
+}
+
+.cart #buy-container form label {
+  color: #FFFBF2;
+  width: 100%;
+  font-size: 1.1em;
+}
+
+.cart #buy-container form input[type='radio'] {
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+  position: relative;
+  -webkit-transform: translate(0, 0.6em);
+          transform: translate(0, 0.6em);
+}
+
+.cart #buy-container form input[type='text'] {
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  padding-left: 1em;
+  font-size: 1.1em;
+  height: 2.5em;
+}
+
+.cart #buy-container form div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  gap: 15px;
+}
+
+.cart #buy-container form div div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: 100%;
+  gap: 0;
+}
+
+.cart #buy-container form div div input[type="text"] {
+  width: 100%;
+  padding-left: 1em;
+  font-size: 1.1em;
+  height: 2.5em;
+}
+
+.cart #buy-container form button {
   color: #010A10;
   font-size: 2em;
   display: block;
