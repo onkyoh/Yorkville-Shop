@@ -376,12 +376,24 @@ body {
             padding: 2.5% 5%;
             * {
                 margin-bottom: 5px;
+                text-shadow: 0px 0px 4px $base-black;
             }
             h2 {
                 color: $base-white;
                 text-shadow: 0px 0px 4px $base-black;
-                margin-bottom: 1em;
+                margin-bottom: 0.5em;
             }
+            span {
+                font-size: 1.3em;
+                color: $base-red;
+                text-shadow: none;
+                background-color: #e6b3b4;
+                outline: none;
+                padding: 0 2.5%;
+                max-width: 100%;
+                border-radius: 5px;
+                margin-bottom: 0.5em;
+            };
             label {
                 color: $base-white;
                 width: 100%;
@@ -392,14 +404,24 @@ body {
                 position: relative;
                 transform: translate(0, 0.6em);
             }
+            p {
+
+            }
             input[type='text'] {
                width: 100%;
-               border-radius: 5px;
+               border-radius: 10px;
                border: none;
                padding-left: 1em;
                font-size: 1.1em;
-               height: 2.5em; 
+               height: 2.5em;
+               outline: none;
+               transition: box-shadow 0.25s;
+               text-shadow: none;
+               &:focus {
+                box-shadow: 0px 0px 16px $base-black;
+               } 
             }
+           
             div {
                 @include flexCenter();
                 width: 100%;
@@ -419,11 +441,20 @@ body {
             }
             button {
                 color: $base-black;
-                font-size: 2em;
-                display: block;
-                width: 100%;
-                height: fit-content;
+                font-size: 1.5em;
+                border-radius: 50px;
+                padding: 0 5%;
+                background-color: $base-white;
+                box-shadow: 0px 0px 8px $base-black;
+                border: none;
+                text-shadow: none;
+                font-weight: bold;
                 cursor: pointer;
+                transition: transform 0.25s, box-shadow 0.25s;
+                &:hover {
+                    transform: scale(110%);
+                    box-shadow: 0px 0px 16px $base-black;;
+                }
             }
         }
     }

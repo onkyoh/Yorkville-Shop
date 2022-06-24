@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { db } from '../firebase-config'
 import { doc, getDoc, updateDoc } from '@firebase/firestore'
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4, validate } from 'uuid'
 
 interface IProps {
   cart: {
@@ -46,6 +46,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
   const [checkout, setCheckout] = useState(false)
   const [paid, setPaid] = useState(false)
   const [ship, setShip] = useState(false)
+  const [error, setError] = useState("")
   const [shipmentAddress, setShipmentAddress] = useState<IAddress>({
     firstName: "",
     lastName: "",
@@ -59,7 +60,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
   const handleGetCart = async () => {
     const userDoc: any = await getDoc(doc(db, 'users', currentUser))
     setCart(userDoc.data().cart)
-    handleTotalPrice([...userDoc.data().cart])
+    handleInitialTotalPrice([...userDoc.data().cart])
   }
 
   const handleDeleteItem = async (name: string, size: string) => {
@@ -74,7 +75,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     await updateDoc((doc(db, 'users', currentUser)), {
       cart: [...tempCart]
     })
-    handleTotalPrice([...tempCart])
+    handleInitialTotalPrice([...tempCart])
   }
 
   const generateId = () => {
@@ -87,20 +88,65 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     return orderId
   }
 
-  const handleTotalPrice = (tempCart: any) => {
+  const handleInitialTotalPrice = (tempCart: any) => {
     var calculatedPrice = 0;
     for (let i = 0; i < cart.length; i++) {
       calculatedPrice = calculatedPrice + (tempCart[i].price * tempCart[i].quantity)
     
     }
-    if (ship) {
+    setTotalPrice(calculatedPrice)
+    console.log("Price set")
+  }
+
+  const handleTotalPrice = (tempCart: any, boolean: boolean) => {
+    var calculatedPrice = 0;
+    for (let i = 0; i < cart.length; i++) {
+      calculatedPrice = calculatedPrice + (tempCart[i].price * tempCart[i].quantity)
+    
+    }
+    if (boolean) {
       calculatedPrice = calculatedPrice + 15
     }
     setTotalPrice(calculatedPrice)
     console.log("Price changed")
   }
 
-  const handleCheckout = async () => {
+  const validateAddress = (formResults: IAddress) => {
+    let errorTracker = "";
+    let isValid = false
+    if (formResults.firstName === "") {
+      errorTracker = "First Name is required."
+    }
+    if (formResults.lastName === "") {
+      errorTracker = "Last Name is required."
+    }
+    if (formResults.address1 === "") {
+      errorTracker = "Address 1 is required."
+    }
+    if (formResults.city === "") {
+      errorTracker = "City is required."
+    }
+    if (formResults.province === "") {
+      errorTracker = "Province 1 is required."
+    }
+    if (formResults.postalCode === "") {
+      errorTracker = "Postal Code is required."
+    }
+    setError(errorTracker)
+    console.log(errorTracker)
+    if (!errorTracker) {
+      isValid = true 
+    }
+    console.log(isValid)
+    return isValid;
+  }
+
+  const handleCheckout = async (e: any) => {
+    e.preventDefault()
+    console.log(shipmentAddress)
+    let isValid = validateAddress(shipmentAddress)
+
+    if (isValid) {
     const userDoc: any = await getDoc(doc(db, 'users', currentUser))
     var oldOrders = (userDoc.data().orders)
     const orderId: string = generateId();
@@ -116,21 +162,24 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
 
     setPaid(true)
   }
+  }
+
+  const handleShip = (boolean: boolean) => {
+    setShip(() => boolean)
+    handleTotalPrice(cart, boolean)
+  }
 
  const handleAddress = (e: any) => {
     const field = e.target.id
     setShipmentAddress({...shipmentAddress, [field]: e.target.value})
   }
 
+
   useEffect(() => {
     if (currentUser) {
       handleGetCart()
     }
   }, [currentUser])
-
-  // useEffect(() => {
-
-  // }, [ship])
 
 
 
@@ -160,50 +209,56 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
   
         <form>
           <h2>Enter Shipping Address</h2>
+          <span>{error}</span>
           <div>
-            <input type="radio" name="Delivery" value="pickup" id="pickup" className="radio" onChange={() => setShip(!ship)}/>
+            <input type="radio" name="Delivery" value="pickup" id="pickup" className="radio" onChange={() => handleShip(false)}/>
             <label htmlFor="pickup">Pickup in Toronto</label>
             <p></p>
           </div>
-
+        
           <div>
-            <input type="radio" name="Delivery" value="ship" id="ship" className="radio" onChange={() => setShip(!ship)}/>
+            <input type="radio" name="Delivery" value="ship" id="ship" className="radio" onChange={() => handleShip(true)}/>
             <label htmlFor="ship">Ship + $15</label>
           </div>
-          <div>
-            <div>
-              <label htmlFor="firstName">First Name *</label>
-              <input type="text" id="firstName" value={shipmentAddress.firstName} onChange={(e) => handleAddress(e)}/>
-            </div>
-            <div>
-              <label htmlFor="lastName">Last Name *</label>
-              <input type="text" id="lastName" value={shipmentAddress.lastName} onChange={(e) => handleAddress(e)}/>
-            </div>
-          </div>
-          <label htmlFor="address1">Address 1 *</label>
-          <input type="text" id="address1" value={shipmentAddress.address1} onChange={(e) => handleAddress(e)}/>
+          {ship ? 
+            <>
+              <div>
+                <div>
+                  <label htmlFor="firstName">First Name *</label>
+                  <input type="text" id="firstName" value={shipmentAddress.firstName} onChange={(e) => handleAddress(e)}/>
+                </div>
+                <div>
+                  <label htmlFor="lastName">Last Name *</label>
+                  <input type="text" id="lastName" value={shipmentAddress.lastName} onChange={(e) => handleAddress(e)}/>
+                </div>
+              </div>
+              <label htmlFor="address1">Address 1 *</label>
+              <input type="text" id="address1" value={shipmentAddress.address1} onChange={(e) => handleAddress(e)}/>
 
-          <label htmlFor="address2">Address 2</label>
-          <input type="text" id="address2" value={shipmentAddress.address2} onChange={(e) => handleAddress(e)}/>
+              <label htmlFor="address2">Address 2</label>
+              <input type="text" id="address2" value={shipmentAddress.address2} onChange={(e) => handleAddress(e)}/>
 
-          <div>
-            <div>
-              <label htmlFor="city">City *</label>
-              <input type="text" id="city" value={shipmentAddress.city} onChange={(e) => handleAddress(e)}/>
-            </div>
-            <div>
-              <label htmlFor="postalCode">Postal Code *</label>
-              <input type="text" id="postalCode" value={shipmentAddress.postalCode} onChange={(e) => handleAddress(e)}/>
-            </div>
-            <div>
-              <label htmlFor="province">Province *</label>
-              <input type="text" id="province" value={shipmentAddress.province} onChange={(e) => handleAddress(e)}/>
-            </div>
-            </div>
-          <p></p>
+              <div>
+                  <div>
+                    <label htmlFor="city">City *</label>
+                    <input type="text" id="city" value={shipmentAddress.city} onChange={(e) => handleAddress(e)}/>
+                  </div>
+                  <div>
+                    <label htmlFor="postalCode">Postal Code *</label>
+                    <input type="text" id="postalCode" value={shipmentAddress.postalCode} onChange={(e) => handleAddress(e)}/>
+                  </div>
+                  <div>
+                    <label htmlFor="province">Province *</label>
+                    <input type="text" id="province" value={shipmentAddress.province} onChange={(e) => handleAddress(e)}/>
+                  </div>
+                </div>
+            </>
+          : 
+            null}
           <p>Total Price: ${totalPrice}</p>
-          <button onClick={handleCheckout}>Checkout</button>
+          <button onClick={handleCheckout}>PURCHASE</button>
         </form>
+
       </div>
       }
     </section>

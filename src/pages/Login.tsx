@@ -5,6 +5,7 @@ import {
     signInWithEmailAndPassword,
 } from 'firebase/auth'
 import { setDoc, doc} from 'firebase/firestore'
+import { Link } from 'react-router-dom'
 
 interface IProps {
     setCurrentUser: React.Dispatch<SetStateAction<string>>
@@ -36,6 +37,8 @@ const Login = ({setCurrentUser}: IProps) => {
             setError(error.message)
             console.log(error.message)
         }
+        window.location.pathname = "/"
+     
     }
 
     const login = async (e: any) => {
@@ -49,6 +52,7 @@ const Login = ({setCurrentUser}: IProps) => {
             setError(error.message)
             console.log(error.message)
         }
+        window.location.pathname = "/"
     }
 
     const handleNeedAccount = () => {
