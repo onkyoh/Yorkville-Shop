@@ -4,6 +4,7 @@ import { getAuth } from "firebase/auth";
 
 
 
+
 const firebaseConfig = {
     apiKey: "AIzaSyCg85egQlmCuTUw8n2GIW-gTWlLBbedqjg",
     authDomain: "yorkville-shop.firebaseapp.com",

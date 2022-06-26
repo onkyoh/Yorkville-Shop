@@ -110,9 +110,10 @@ const handleGetShop = async (chosenBrand: string) => {
     const sizeData = Object.entries(tempSizeDetails[1])
 
 
-    setSizes([...sizeArray])
+    
     setSizesDetail([...sizeData])
-    setCurrentShoe(({...currentShoe, name: e.target.innerHTML, img: selectedImg, size: ""}))
+    handleOrderSizes([...sizeArray])
+    setCurrentShoe(({...currentShoe, name: e.target.innerHTML, img: selectedImg, size: "", price: 0, maxQuantity: 0}))
     setSingleFocus(true)
   }
 
@@ -158,6 +159,50 @@ const handleGetShop = async (chosenBrand: string) => {
     //after adding to cart clicking another size = no img
   }
 
+const handleOrderSizes = (arrayOfSizes: string[]) => {
+  var juniorArray: string[] = []
+  var womenArray: string[] = []
+  var menArray: string[] = []
+  for (let i = 0; i < arrayOfSizes.length; i++) {
+    if (arrayOfSizes[i].includes('Y')) {
+      juniorArray = [...juniorArray, arrayOfSizes[i]]
+    }  else if (arrayOfSizes[i].includes('W')) {
+      womenArray = [...womenArray, arrayOfSizes[i]]
+    } else {
+      menArray = [...menArray, arrayOfSizes[i]]
+    }
+ }
+
+//turning sizes in number, ordering by size, then adding the necessary suffix at the end
+
+ const newArrayJ = juniorArray.map(item => parseFloat(item))
+ newArrayJ.sort(function(a, b){ 
+  return a - b
+})
+
+var newJuniorArray: any = []
+ for (let i = 0; i < newArrayJ.length; i++) {
+  newJuniorArray = [...newJuniorArray, (newArrayJ[i] + "Y")];
+ }
+
+const newArrayW = womenArray.map(item => parseFloat(item))
+ newArrayW.sort(function(a, b){ 
+  return a - b
+})
+
+var newWomenArray: any = []
+ for (let i = 0; i < newArrayW.length; i++) {
+  newWomenArray = [...newWomenArray, (newArrayW[i] + "W")];
+ }
+
+const newMenArray = menArray.map(item => parseFloat(item))
+ newMenArray.sort(function(a, b){ 
+  return a - b
+})
+
+  setSizes([...newJuniorArray, ...newWomenArray, ...newMenArray])
+}
+
 useEffect(() => {
   const chosenBrand = window.localStorage.getItem('brand')
   if (typeof(chosenBrand) === 'string' ) {
@@ -172,29 +217,30 @@ useEffect(() => {
   return (
     <div className='shop'>
         {singleFocus ? 
+        <>
           <div id="single-focus-container">
-            <div id="back-to-shop" onClick={() => setSingleFocus(false)}>Back</div>
-            <div id="content-container">
-              <div id="p-img-container">
+
+            <div className="item-container">
                 <img src={currentShoe.img} alt="Shoe" />
                 <p>{currentShoe.name}</p>
+            </div>
+
+            <div id="details-container">
+              <div>
+                <h3>Price: ${currentShoe.price}</h3>
+                <h4>Stock: {currentShoe.maxQuantity}</h4>
               </div>
-              <div id="size-add-container">
-                <div id="size-container">
-                  {sizes.map((size: string, i: number) => (
-                    <button className="size-buttons" key={i} onClick={(e) => handleSizeDetails(e)}>{size}</button>
+              <ul>
+                  {sizes.map((size: string, i) => (
+                    <li key={size} onClick={(e) => handleSizeDetails(e)} style={size === currentShoe.size ? {backgroundColor: "#010A10", color: "#FFFBF2"} : {}}>{size}</li>
                   // TODO: add href/active class to sizes
                   ))}
-                
-                </div>
-                  {!currentShoe.size ? 
-                    <button className="add-to-cart inactive" >ADD TO CART</button> 
-                    :
-                    <button className="add-to-cart" onClick={handleAddToCart}>ADD TO CART</button>
-                  }
-              </div>
+              </ul>
+              <button className="add-to-cart" onClick={handleAddToCart} disabled={currentShoe.size ? false : true}>ADD TO CART</button>
             </div>
-          </div> 
+          </div>
+          <button id="back-to-shop" onClick={() => setSingleFocus(false)}>Back</button>
+          </> 
           :
           shop.map((shoe: string, i: number) => (
             <div key={i}  className="item-container">

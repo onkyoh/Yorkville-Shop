@@ -143,93 +143,92 @@ body {
             background-color: $base-gray;
         }
     }
+    #back-to-shop {
+        color: $base-black;
+        position: fixed;
+        top: 85px;
+        left: 10px;
+    }
     #single-focus-container {
         background-color: $base-white;
         background: url("../pictures/yorkville\ checkout\ background.jpg");
-        width: 100vw;
-        height: calc(100vh - 75px);
-        #back-to-shop {
-            color: $base-black;
-        }
-        #content-container{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        @include flexCenter();
+        justify-content: space-around;
+        flex-wrap: wrap;
+        width: calc(min(800px, 90%));
+        gap: 50px;
+        margin-top: 75px;
+        padding: 5% 0;
+    
+   
+        .item-container {
+            width: calc(clamp(300px, 30vw, 400px));
+            aspect-ratio: 1/1;
             @include flexCenter();
-            flex-wrap: wrap;
-            gap: 40px;
-            position: absolute;
-            left: 50%;
-            top: calc(50% + 37.5px);
-            width: calc(min(90%, 1000px));
-            transform: translate(-50%, -50%);
-            padding: 1em 0;
-            background-color: rgba(255, 255, 255, .15);  
-            backdrop-filter: blur(7.5px);
-            box-shadow: 0px 0px 16px gray;
-            border-radius: 15px;
-            #p-img-container {
-                @include flexCenter();
-                flex-direction: column;
-                width: calc(clamp(300px, 50%, 450px));
-                gap: 1vh;
-            }
-            img {
-                width: 80%;
-                box-shadow: 2px 2px 8px $base-black, -2px -2px 8px $base-gray;
-            }
-            p {
-                font-size: calc(clamp(1.2em, 3vw, 1.5em));
-                width: 100%;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: $base-white;
+            box-shadow: 0px 0px 16px $base-black;
+        }
+        #details-container {
+         @include flexCenter();
+         flex-direction: column;
+         background-color: $base-white;
+         width: 300px;
+         height: fit-content;
+         box-shadow: 0px 0px 16px $base-black;
+         padding: 2.5% 5%;
+         gap: 25px;
+            div {
                 text-align: center;
-                color: $base-white
-            }
-            #size-add-container {
-                @include flexCenter();
-                flex-direction: column;
-                width: 40%;
-                gap: 45px;
             }
             .add-to-cart {
-                padding: 0.5em 1em;
-                font-size: calc(clamp(1em, 2vw, 1.3em));
                 cursor: pointer;
-                border: none;
-                background-color: $base-red;
-                color: $base-white;
-                border-radius: 5px;
-                transition: background-color 0.5s;
+                border: 2px solid $base-black;
+                padding: 0 2.5%;
+                font-size: 1.3em;
+                background-color: $base-white;
+                transition: color 0.25s, background-color 0.25s;
                 &:hover {
-                    background-color: $dark-red;
+                    background-color: $base-black;
+                    color: $base-white;
+                }
+                &:disabled {
+                    opacity: 0.5;
+                    pointer-events: none;
                 }
             }
-            .add-to-cart.inactive {
-                cursor: auto;
-                opacity: 0.5;
-                &:hover {
-                    background-color: $base-red;
-                }
+            h3 {
+                font-size: 1.5em;
             }
-            #size-container {
-                width: 80%;
-                @include flexCenter();
-                flex-wrap: wrap;
+            ul {
+                list-style: none;
+                display: grid;
+                grid-template-columns: auto auto auto auto;
                 gap: 5px;
-                .size-buttons {
-                    width: 75px;
-                    aspect-ratio: 2/1;
-                    font-size: 1.3em;
+                max-width: 300px;
+                li {
+                    outline: 1px solid $base-black;
+                    width: 60px;
+                    font-size: 1.2em;
+                    text-align: center;
                     cursor: pointer;
-                    border: none;
-                    background-color: $base-white;
-                    color: $base-black;
-                    transition: background-color 0.5s, color 0.25s;
-                    border: #d60407 2px solid;
-                    border-radius: 5px;
+                    transition: border 0.25s;
                     &:hover {
-                        color: $base-white;
-                        background-color: $base-red;
+                        outline: 2px solid $base-black;
+                    }
+                    &:active {
+
                     }
                 }
             }
         }
+        
+        
         
         
     }
@@ -312,10 +311,9 @@ body {
         height: 100%;
         overflow-y: auto;
         padding-top: 25px;
-        #empty {
-            display: block;
-            color: $base-white;
-            font-size: 3em;
+        span {
+            font-size: 1.5em;
+            color: $base-red;
         }
        ul {
         list-style: none;
@@ -351,6 +349,16 @@ body {
         }
        }
     }
+    h1 {
+        font-size: 3em;
+        color: $base-white;
+        text-shadow: 0px 0px 6px $base-black;
+    }
+    .instruction-details {
+        width: 90%;
+        font-size: calc(clamp(0.4em, 2vw , 1.2em));
+        text-align: center;
+    }
     #buy-container {
         width: 100%;
         height: 100%;
@@ -359,11 +367,39 @@ body {
         p {
             color: $base-white;
             font-size: 2em;
-        }   
+        }
         #back-to-cart {
             position: absolute;
             top: 75px;
             left: 0;
+        }
+        section {
+            @include flexCenter();
+            justify-content: space-around;
+            width: 100%;
+            .delivery-method {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                align-items: start;
+                width: fit-content;
+                div {
+                    display: flex;
+                    flex-direction: row; 
+                    gap: 1vw;
+                 
+                    label {
+                        font-size: calc(clamp(1em, 1vw,1.2em))
+                    }
+                }
+                p {
+                    font-size: calc(clamp(0.95em, 1vw,1.2em));
+                    width: max-content;
+                    cursor: pointer;
+
+            }
+        }
+       
         }
         form {
             @include flexCenter();
@@ -393,7 +429,16 @@ body {
                 max-width: 100%;
                 border-radius: 5px;
                 margin-bottom: 0.5em;
-            };
+            }
+            .address3-container {
+                label {
+                    height: 25px;
+                }
+                #postalCode-label {
+                    font-size: calc(clamp(0.9em, 1vw, 1.1em));
+                    line-height: 30px;
+                }
+            }
             label {
                 color: $base-white;
                 width: 100%;
@@ -403,9 +448,6 @@ body {
                 align-self: flex-start;
                 position: relative;
                 transform: translate(0, 0.6em);
-            }
-            p {
-
             }
             input[type='text'] {
                width: 100%;
@@ -453,12 +495,52 @@ body {
                 transition: transform 0.25s, box-shadow 0.25s;
                 &:hover {
                     transform: scale(110%);
-                    box-shadow: 0px 0px 16px $base-black;;
+                    box-shadow: 0px 0px 16px $base-black;
+                }
+                &:disabled {
+                    opacity: 0.5;
+                    &:hover {
+                        transform: none;
+                        box-shadow: 0px 0px 8px $base-black;
+                    }
                 }
             }
         }
     }
 }
+.modal {
+    width: calc(min(500px, 90%));
+    background-color: $base-white;
+    color: $base-black;
+    padding: 2.5%;
+    padding-top: 0;
+    border-radius: 15px;
+    margin: auto;
+    border: none;
+    &::backdrop {
+        background-color: #010A10;
+        opacity: 0.5;
+    }
+        #close-modal {
+            @include flexCenter();
+            justify-content: space-between;
+            h3 {
+                font-size: 2em;
+            }
+            span {
+                width: fit-content;
+                font-size: 2.5em;
+                cursor: pointer;
+                font-weight: bold;
+                transition: color 0.5s;
+
+                &:hover {
+                    color: $base-red;
+                }
+            }   
+          
+        }
+    }
 
 .orders {
     padding-top: 75px;

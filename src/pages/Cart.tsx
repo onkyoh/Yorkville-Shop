@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { db } from '../firebase-config'
 import { doc, getDoc, updateDoc } from '@firebase/firestore'
-import { v4 as uuidv4, validate } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
+import Instructions from '../components/Instructions'
+
 
 interface IProps {
   cart: {
@@ -44,7 +46,6 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
 
   const [totalPrice, setTotalPrice] = useState(0)
   const [checkout, setCheckout] = useState(false)
-  const [paid, setPaid] = useState(false)
   const [ship, setShip] = useState(false)
   const [error, setError] = useState("")
   const [shipmentAddress, setShipmentAddress] = useState<IAddress>({
@@ -56,11 +57,21 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     postalCode: "",
     province: "",
   })
+  const [cartError, setCartError] = useState("")
+  const [isDisabled, setIsDisabled] = useState(true)
+  const [paid, setPaid] = useState(false)
+  const [modalDisplay, setModalDisplay] = useState(false)
+  const [displayedID, setDisplayedID] = useState("")
 
   const handleGetCart = async () => {
-    const userDoc: any = await getDoc(doc(db, 'users', currentUser))
-    setCart(userDoc.data().cart)
-    handleInitialTotalPrice([...userDoc.data().cart])
+    try {
+      const userDoc: any = await getDoc(doc(db, 'users', currentUser))
+      setCart(userDoc.data().cart)
+      handleInitialTotalPrice([...userDoc.data().cart])
+    } catch (e: any) {
+      setCartError("Error with cart retrieval")
+      console.log(e.message)
+    }
   }
 
   const handleDeleteItem = async (name: string, size: string) => {
@@ -85,6 +96,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     for (let i = 0; i < 8; i++) {
       orderId = orderId + tempId[i]
     }
+    setDisplayedID(orderId)
     return orderId
   }
 
@@ -127,7 +139,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
       errorTracker = "City is required."
     }
     if (formResults.province === "") {
-      errorTracker = "Province 1 is required."
+      errorTracker = "Province is required."
     }
     if (formResults.postalCode === "") {
       errorTracker = "Postal Code is required."
@@ -141,32 +153,50 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     return isValid;
   }
 
-  const handleCheckout = async (e: any) => {
+  const handlePurchase = async (e: any) => {
     e.preventDefault()
-    console.log(shipmentAddress)
-    let isValid = validateAddress(shipmentAddress)
+    console.log("purchase called")
+    let isValid = true
+    if (ship) {
+      isValid = validateAddress(shipmentAddress)
+    }
+
 
     if (isValid) {
-    const userDoc: any = await getDoc(doc(db, 'users', currentUser))
-    var oldOrders = (userDoc.data().orders)
-    const orderId: string = generateId();
-    var newOrder: IOrder['orders'] = { id: orderId, items: cart, totalPrice: totalPrice}
+    try {
+      const userDoc: any = await getDoc(doc(db, 'users', currentUser))
+      var oldOrders = (userDoc.data().orders)
+      const orderId: string = generateId();
+      var newOrder: IOrder['orders'] = { id: orderId, items: cart, totalPrice: totalPrice}
 
-    await updateDoc((doc(db, 'users', currentUser)), {
-      orders: [...oldOrders, newOrder]
-    })
+      await updateDoc((doc(db, 'users', currentUser)), {
+        orders: [...oldOrders, newOrder]
+      })
 
-    await updateDoc((doc(db, 'users', currentUser)), {
-      cart: []
-    })
-
-    setPaid(true)
+      await updateDoc((doc(db, 'users', currentUser)), {
+        cart: []
+      })
+      setPaid(true)
+    } catch (e: any) {
+      setError(e.messsage)
+    }
+    
+  } 
   }
+
+  const handleGoToCheckout = () => {
+    setCheckout(false)
+    setShip(false)
+    handleInitialTotalPrice([...cart])
+    setError("")
+    setIsDisabled(true)
   }
 
   const handleShip = (boolean: boolean) => {
     setShip(() => boolean)
     handleTotalPrice(cart, boolean)
+    setIsDisabled(false)
+    setError("")
   }
 
  const handleAddress = (e: any) => {
@@ -174,6 +204,14 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     setShipmentAddress({...shipmentAddress, [field]: e.target.value})
   }
 
+  const handleModal = (display: string) => {
+    const modal: any = document.querySelector(".modal")
+    if (display === "show") {
+      modal.showModal();
+    } else {
+      modal.close();
+    }
+  }
 
   useEffect(() => {
     if (currentUser) {
@@ -187,11 +225,12 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     <section className='cart'>
       {!checkout ? 
       <div id='cart-list'>
-        {cart.length === 0 || !currentUser || paid ? 
-          <div id="empty">No items in cart...</div>  
+        {cart.length === 0 || !currentUser ? 
+          <h1>No items in cart...</h1>  
             :
           <> 
-          <button onClick={() => setCheckout(true)}>Go to checkout</button>
+          {cart.length === 0 ? null : <button onClick={() => setCheckout(true)}>Go to checkout</button>}
+          <span>{cartError}</span>
           <ul>
             {cart.map((item: any) => (
               <li key={`${item.name}+${item.size}`}>
@@ -204,22 +243,31 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
         }
       </div>
       :
+      <>
+      {!paid ?
       <div id='buy-container'>
-        <button id="back-to-cart" onClick={() => setCheckout(false)}>Back</button>
-  
+        <button id="back-to-cart" onClick={handleGoToCheckout}>Back</button>
         <form>
           <h2>Enter Shipping Address</h2>
           <span>{error}</span>
-          <div>
-            <input type="radio" name="Delivery" value="pickup" id="pickup" className="radio" onChange={() => handleShip(false)}/>
-            <label htmlFor="pickup">Pickup in Toronto</label>
-            <p></p>
-          </div>
-        
-          <div>
-            <input type="radio" name="Delivery" value="ship" id="ship" className="radio" onChange={() => handleShip(true)}/>
-            <label htmlFor="ship">Ship + $15</label>
-          </div>
+          <section>
+            <div className='delivery-method'>
+              <div>
+                <input type="radio" name="Delivery" value="pickup" id="pickup" className="radio" onChange={() => handleShip(false)}/>
+                <label htmlFor="pickup">Pickup in Toronto</label>
+              </div>
+              {!ship ? <p onClick={() => handleModal("show")}>Pickup instructions</p> : null}
+            </div>
+          
+            <div className='delivery-method'>
+              <div >
+                <input type="radio" name="Delivery" value="ship" id="ship" className="radio" onChange={() => handleShip(true)}/>
+                <label htmlFor="ship">Ship + $15</label>
+              </div>
+              {ship ? <p onClick={() => handleModal("show")}>Shipping instructions</p> : null}
+            </div>
+          </section>
+       
           {ship ? 
             <>
               <div>
@@ -238,13 +286,13 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
               <label htmlFor="address2">Address 2</label>
               <input type="text" id="address2" value={shipmentAddress.address2} onChange={(e) => handleAddress(e)}/>
 
-              <div>
+              <div className='address3-container'>
                   <div>
                     <label htmlFor="city">City *</label>
                     <input type="text" id="city" value={shipmentAddress.city} onChange={(e) => handleAddress(e)}/>
                   </div>
                   <div>
-                    <label htmlFor="postalCode">Postal Code *</label>
+                    <label htmlFor="postalCode" id="postalCode-label">Postal Code *</label>
                     <input type="text" id="postalCode" value={shipmentAddress.postalCode} onChange={(e) => handleAddress(e)}/>
                   </div>
                   <div>
@@ -256,10 +304,22 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
           : 
             null}
           <p>Total Price: ${totalPrice}</p>
-          <button onClick={handleCheckout}>PURCHASE</button>
+          <button onClick={handlePurchase} disabled={isDisabled}>PURCHASE</button>
         </form>
-
+        <Instructions handleModal={handleModal} ship={ship}/> 
       </div>
+      : <>
+          <div className='instruction-details'>
+            <h1>E-TRANSFER: keagankeung@hotmail.com</h1>
+            <h1>ORDER ID: {displayedID}</h1>
+            <h1>ORDER PRICE: ${totalPrice}</h1>
+            <p onClick={() => handleModal("show")}>Instructions</p>
+          </div>
+       
+          <Instructions handleModal={handleModal} ship={ship}/> 
+        </>
+      }
+       </>
       }
     </section>
   )

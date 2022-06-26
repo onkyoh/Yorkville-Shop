@@ -31,7 +31,7 @@ const Main = ({brandChange, currentUser, setCurrentUser}: IProps) => {
   
 
   return (
-    <Routes> {/* The Switch decides which component to show based on the current URL.*/}
+    <Routes>
       <Route path='/' element={<Home/>}></Route>
       <Route path='/Shop' element={<Shop brandChange={brandChange} currentUser={currentUser}/>}></Route>
       <Route path='/Cart' element={<Cart cart={cart} setCart={setCart} currentUser={currentUser}/>}></Route>
