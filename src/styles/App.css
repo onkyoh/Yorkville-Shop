@@ -856,7 +856,15 @@ body {
   padding-top: 75px;
 }
 
-.orders li {
+.orders h3 {
+  color: white;
+  text-align: center;
+  text-shadow: 0px 0px 4px #010A10;
+  font-size: 2em;
+  margin: 1em 0;
+}
+
+.orders #orders-list {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -866,10 +874,29 @@ body {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  margin: 2em;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: calc(min(600px, 90%));
+  margin: auto;
+  gap: 2em;
+  list-style: none;
+}
+
+.orders #orders-list #orders-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 15px;
   padding: 1.5em;
   border-radius: 15px;
   background-color: rgba(255, 255, 255, 0.15);
@@ -877,6 +904,55 @@ body {
           backdrop-filter: blur(7.5px);
   -webkit-box-shadow: 0px 0px 16px #010A10;
           box-shadow: 0px 0px 16px #010A10;
+  text-shadow: 0px 0px 4px #010A10;
+  width: 100%;
+  font-size: 1.2em;
+}
+
+.orders #orders-list #orders-item span {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   color: #FFFBF2;
+}
+
+.orders #orders-list #orders-item span div {
+  color: #FFFBF2;
+  padding-left: 5px;
+}
+
+.orders #orders-list #orders-item ol {
+  color: #FFFBF2;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  list-style-position: inside;
+}
+
+.orders #orders-list #orders-item ol span {
+  cursor: pointer;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin-bottom: 10px;
+}
+
+.orders #orders-list #orders-item ol li {
+  color: #FFFBF2;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin-bottom: 10px;
+  display: none;
+}
+
+.orders #orders-list #orders-item .open-list li {
+  display: block;
 }
 /*# sourceMappingURL=App.css.map */

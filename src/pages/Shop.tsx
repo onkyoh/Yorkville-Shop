@@ -195,10 +195,12 @@ var newWomenArray: any = []
   newWomenArray = [...newWomenArray, (newArrayW[i] + "W")];
  }
 
-const newMenArray = menArray.map(item => parseFloat(item))
- newMenArray.sort(function(a, b){ 
+const tempMenArray = menArray.map(item => parseFloat(item))
+ tempMenArray.sort(function(a, b){ 
   return a - b
 })
+
+const newMenArray = tempMenArray.map((size: number) => JSON.stringify(size))
 
   setSizes([...newJuniorArray, ...newWomenArray, ...newMenArray])
 }

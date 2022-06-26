@@ -21,12 +21,13 @@ interface IOrder {
   orders: {
     totalPrice: number
     id: string
-      items: {
-        name: string
-        size: string
-        quantity: number
-        price: number
-        maxQuantity: number
+    paid: boolean
+    items: {
+      name: string
+      size: string
+      quantity: number
+      price: number
+      maxQuantity: number
     }[];
   }
 }
@@ -167,7 +168,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
       const userDoc: any = await getDoc(doc(db, 'users', currentUser))
       var oldOrders = (userDoc.data().orders)
       const orderId: string = generateId();
-      var newOrder: IOrder['orders'] = { id: orderId, items: cart, totalPrice: totalPrice}
+      var newOrder: IOrder['orders'] = { id: orderId, items: cart, totalPrice: totalPrice, paid: false}
 
       await updateDoc((doc(db, 'users', currentUser)), {
         orders: [...oldOrders, newOrder]
