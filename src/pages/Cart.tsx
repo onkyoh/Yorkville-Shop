@@ -22,6 +22,7 @@ interface IOrder {
     totalPrice: number
     id: string
     paid: boolean
+    timePlaced: string
     items: {
       name: string
       size: string
@@ -61,7 +62,6 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
   const [cartError, setCartError] = useState("")
   const [isDisabled, setIsDisabled] = useState(true)
   const [paid, setPaid] = useState(false)
-  const [modalDisplay, setModalDisplay] = useState(false)
   const [displayedID, setDisplayedID] = useState("")
 
   const handleGetCart = async () => {
@@ -101,6 +101,16 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     return orderId
   }
 
+  const generateTime = async () => {
+    try {
+      const timeFetch: any = await fetch("https://timeapi.io/api/Time/current/zone?timeZone=EST")
+      const timeResponse: any = await timeFetch.json()
+      return timeResponse.dateTime
+    } catch (e: any) {
+      console.log(e.message)
+    }
+  }
+
   const handleInitialTotalPrice = (tempCart: any) => {
     var calculatedPrice = 0;
     for (let i = 0; i < cart.length; i++) {
@@ -110,6 +120,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     setTotalPrice(calculatedPrice)
     console.log("Price set")
   }
+
 
   const handleTotalPrice = (tempCart: any, boolean: boolean) => {
     var calculatedPrice = 0;
@@ -124,9 +135,13 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     console.log("Price changed")
   }
 
+
   const validateAddress = (formResults: IAddress) => {
     let errorTracker = "";
     let isValid = false
+
+    const postalValidation: RegExp = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i
+
     if (formResults.firstName === "") {
       errorTracker = "First Name is required."
     }
@@ -141,6 +156,9 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     }
     if (formResults.province === "") {
       errorTracker = "Province is required."
+    }
+    if (!formResults.postalCode.match(postalValidation)) {
+      errorTracker = "Not a valid Postal Code."
     }
     if (formResults.postalCode === "") {
       errorTracker = "Postal Code is required."
@@ -168,7 +186,8 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
       const userDoc: any = await getDoc(doc(db, 'users', currentUser))
       var oldOrders = (userDoc.data().orders)
       const orderId: string = generateId();
-      var newOrder: IOrder['orders'] = { id: orderId, items: cart, totalPrice: totalPrice, paid: false}
+      const timePlaced: any = generateTime();
+      var newOrder: IOrder['orders'] = { id: orderId, items: cart, totalPrice: totalPrice, paid: false, timePlaced: timePlaced}
 
       await updateDoc((doc(db, 'users', currentUser)), {
         orders: [...oldOrders, newOrder]
@@ -234,7 +253,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
           <span>{cartError}</span>
           <ul>
             {cart.map((item: any) => (
-              <li key={`${item.name}+${item.size}`}>
+              <li key={`${item.name}+${item.size}`} >
                 <p>Shoe: {item.name}, Size: {item.size}, Price: ${item.price}, Quantity: {item.quantity}</p>
                 <button onClick={() => handleDeleteItem(item.name, item.size)}> X </button>
               </li>
@@ -274,15 +293,15 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
               <div>
                 <div>
                   <label htmlFor="firstName">First Name *</label>
-                  <input type="text" id="firstName" value={shipmentAddress.firstName} onChange={(e) => handleAddress(e)}/>
+                  <input type="text" id="firstName" value={shipmentAddress.firstName} onChange={(e) => handleAddress(e)} required/>
                 </div>
                 <div>
                   <label htmlFor="lastName">Last Name *</label>
-                  <input type="text" id="lastName" value={shipmentAddress.lastName} onChange={(e) => handleAddress(e)}/>
+                  <input type="text" id="lastName" value={shipmentAddress.lastName} onChange={(e) => handleAddress(e)} required/>
                 </div>
               </div>
               <label htmlFor="address1">Address 1 *</label>
-              <input type="text" id="address1" value={shipmentAddress.address1} onChange={(e) => handleAddress(e)}/>
+              <input type="text" id="address1" value={shipmentAddress.address1} onChange={(e) => handleAddress(e)} required/>
 
               <label htmlFor="address2">Address 2</label>
               <input type="text" id="address2" value={shipmentAddress.address2} onChange={(e) => handleAddress(e)}/>
@@ -290,15 +309,15 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
               <div className='address3-container'>
                   <div>
                     <label htmlFor="city">City *</label>
-                    <input type="text" id="city" value={shipmentAddress.city} onChange={(e) => handleAddress(e)}/>
+                    <input type="text" id="city" value={shipmentAddress.city} onChange={(e) => handleAddress(e)} required/>
                   </div>
                   <div>
                     <label htmlFor="postalCode" id="postalCode-label">Postal Code *</label>
-                    <input type="text" id="postalCode" value={shipmentAddress.postalCode} onChange={(e) => handleAddress(e)}/>
+                    <input type="text" id="postalCode" value={shipmentAddress.postalCode} onChange={(e) => handleAddress(e)} required/>
                   </div>
                   <div>
                     <label htmlFor="province">Province *</label>
-                    <input type="text" id="province" value={shipmentAddress.province} onChange={(e) => handleAddress(e)}/>
+                    <input type="text" id="province" value={shipmentAddress.province} onChange={(e) => handleAddress(e)} required/>
                   </div>
                 </div>
             </>

@@ -31,17 +31,22 @@ body {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  padding: 0 5%;
-  background-color: rgba(255, 255, 255, 0.15);
-  -webkit-backdrop-filter: blur(7.5px);
-          backdrop-filter: blur(7.5px);
+  padding: 0 3vw;
   -webkit-box-shadow: 0px 0px 16px black;
           box-shadow: 0px 0px 16px black;
+  background-color: rgba(200, 200, 200, 0.3);
 }
 
-.navbar #logo {
+.navbar #logo a {
   color: #FFFBF2;
-  font-size: 1.3em;
+  font-size: 1.6em;
+  text-decoration: none;
+  text-shadow: 1px 1px 1px black;
+  font-weight: bold;
+}
+
+.navbar #burger {
+  display: none;
 }
 
 .navbar ul {
@@ -60,7 +65,7 @@ body {
 
 .navbar ul li {
   height: 100%;
-  width: 120px;
+  width: 100px;
   color: #FFFBF2;
   font-weight: bold;
   font-size: 1.1em;
@@ -71,7 +76,7 @@ body {
 }
 
 .navbar ul li:hover {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .navbar ul li a {
@@ -104,37 +109,48 @@ body {
   width: 120px;
 }
 
+.navbar ul #shop-anchor span {
+  color: #FFFBF2;
+}
+
+.navbar ul #shop-anchor span::after {
+  content: "\25BC";
+}
+
 .navbar ul #shop-anchor #shop-dropdown {
   display: none;
   position: absolute;
   top: 75px;
   width: 200px;
-  background-color: rgba(255, 255, 255, 0.15);
-  -webkit-backdrop-filter: blur(7.5px);
-          backdrop-filter: blur(7.5px);
+  -webkit-box-shadow: 2px 2px 8px #010A10, -2px 2px 8px #010A10;
+          box-shadow: 2px 2px 8px #010A10, -2px 2px 8px #010A10;
+  background-color: rgba(200, 200, 200, 0.3);
 }
 
 .navbar ul #shop-anchor #shop-dropdown a {
   font-size: 1.2em;
   color: #FFFBF2;
   padding: 0.5em 1em;
-  background-color: rgba(255, 255, 255, 0.1);
-  -webkit-backdrop-filter: blur(7.5px);
-          backdrop-filter: blur(7.5px);
-  -webkit-transition: background-color 0.5s, opacity 0.5s;
-  transition: background-color 0.5s, opacity 0.5s;
+  -webkit-transition: background-color 0.5s;
+  transition: background-color 0.5s;
 }
 
 .navbar ul #shop-anchor #shop-dropdown a:hover {
-  background-color: rgba(21, 22, 22, 0.37);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .navbar ul #shop-anchor:hover {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .navbar ul #shop-anchor:hover #shop-dropdown {
-  display: block;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 .page {
@@ -164,7 +180,6 @@ body {
 
 .shop .item-container {
   width: calc(clamp(300px, 30vw, 400px));
-  aspect-ratio: 1/1;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -188,7 +203,7 @@ body {
 
 .shop .item-container p {
   font-family: 'Tillana', cursive;
-  font-size: calc(clamp(1.1em, 3vw, 1.4em));
+  font-size: calc(clamp(1.1em, 2vw, 1.4em));
   width: 100%;
   padding: 1em 0.5em;
   background-color: #FFFBF2;
@@ -214,8 +229,6 @@ body {
 }
 
 .shop #single-focus-container {
-  background-color: #FFFBF2;
-  background: url("../pictures/yorkville checkout background.jpg");
   position: absolute;
   top: 50%;
   left: 50%;
@@ -242,7 +255,6 @@ body {
 
 .shop #single-focus-container .item-container {
   width: calc(clamp(300px, 30vw, 400px));
-  aspect-ratio: 1/1;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -279,6 +291,7 @@ body {
       -ms-flex-direction: column;
           flex-direction: column;
   background-color: #FFFBF2;
+  border-radius: 15px;
   width: 300px;
   height: -webkit-fit-content;
   height: -moz-fit-content;
@@ -361,9 +374,7 @@ body {
   -webkit-box-shadow: 0px 0px 16px #010A10;
           box-shadow: 0px 0px 16px #010A10;
   width: calc(clamp(300px, 50vw , 500px));
-  background-color: rgba(255, 255, 255, 0.15);
-  -webkit-backdrop-filter: blur(7.5px);
-          backdrop-filter: blur(7.5px);
+  background-color: rgba(200, 200, 200, 0.3);
   border-radius: 15px;
 }
 
@@ -403,15 +414,17 @@ body {
   font-size: 1em;
   border-radius: 15px;
   margin-bottom: 1.3em;
-  color: white;
   border: none;
-  background: none;
-  -webkit-box-shadow: inset 2px 2px 10px #010A10, inset -2px -2px 10px #e9e8e8;
-          box-shadow: inset 2px 2px 10px #010A10, inset -2px -2px 10px #e9e8e8;
+  -webkit-transition: -webkit-box-shadow 0.25s;
+  transition: -webkit-box-shadow 0.25s;
+  transition: box-shadow 0.25s;
+  transition: box-shadow 0.25s, -webkit-box-shadow 0.25s;
 }
 
 .login .form-container form input:focus {
   outline: none;
+  -webkit-box-shadow: 0px 0px 16px #010A10;
+          box-shadow: 0px 0px 16px #010A10;
 }
 
 .login .form-container form button {
@@ -500,9 +513,7 @@ body {
   margin: 2em;
   padding: 1.5em;
   border-radius: 15px;
-  background-color: rgba(255, 255, 255, 0.15);
-  -webkit-backdrop-filter: blur(7.5px);
-          backdrop-filter: blur(7.5px);
+  background-color: rgba(200, 200, 200, 0.3);
   -webkit-box-shadow: 0px 0px 16px #010A10;
           box-shadow: 0px 0px 16px #010A10;
 }
@@ -603,7 +614,7 @@ body {
   gap: 0;
   -webkit-box-align: start;
       -ms-flex-align: start;
-          align-items: start;
+          align-items: flex-start;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -647,9 +658,7 @@ body {
       -ms-flex-direction: column;
           flex-direction: column;
   width: calc(min(90%, 600px));
-  background-color: rgba(255, 255, 255, 0.15);
-  -webkit-backdrop-filter: blur(7.5px);
-          backdrop-filter: blur(7.5px);
+  background-color: rgba(200, 200, 200, 0.3);
   -webkit-box-shadow: 0px 0px 8px #010A10;
           box-shadow: 0px 0px 8px #010A10;
   border-radius: 15px;
@@ -801,7 +810,7 @@ body {
   width: calc(min(500px, 90%));
   background-color: #FFFBF2;
   color: #010A10;
-  padding: 2.5%;
+  padding: 1em 2.5em;
   padding-top: 0;
   border-radius: 15px;
   margin: auto;
@@ -899,9 +908,7 @@ body {
   gap: 15px;
   padding: 1.5em;
   border-radius: 15px;
-  background-color: rgba(255, 255, 255, 0.15);
-  -webkit-backdrop-filter: blur(7.5px);
-          backdrop-filter: blur(7.5px);
+  background-color: rgba(200, 200, 200, 0.3);
   -webkit-box-shadow: 0px 0px 16px #010A10;
           box-shadow: 0px 0px 16px #010A10;
   text-shadow: 0px 0px 4px #010A10;
@@ -954,5 +961,205 @@ body {
 
 .orders #orders-list #orders-item .open-list li {
   display: block;
+}
+
+@media only screen and (max-width: 1000px) {
+  .navbar {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+  .navbar ul {
+    padding-right: 12px;
+  }
+  .navbar #logo {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .navbar {
+    padding: 0;
+    background-color: rgba(50, 50, 50, 0.9);
+    -webkit-box-shadow: none;
+            box-shadow: none;
+    border-bottom: rgba(0, 0, 0, 0.4) 2px solid;
+  }
+  .navbar #burger {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: block;
+    margin-right: auto;
+    margin-left: 17.5px;
+    cursor: pointer;
+  }
+  .navbar #burger span {
+    position: absolute;
+    width: 100%;
+    height: 6px;
+    background-color: #FFFBF2;
+    border-radius: 5px;
+    -webkit-transform: rotate(0);
+            transform: rotate(0);
+    -webkit-box-shadow: 0px 0px 5px #010A10;
+            box-shadow: 0px 0px 5px #010A10;
+    -webkit-transition: top 0.25s ease-in-out, opacity 0.2s, -webkit-transform 0.25s ease-in-out;
+    transition: top 0.25s ease-in-out, opacity 0.2s, -webkit-transform 0.25s ease-in-out;
+    transition: transform 0.25s ease-in-out, top 0.25s ease-in-out, opacity 0.2s;
+    transition: transform 0.25s ease-in-out, top 0.25s ease-in-out, opacity 0.2s, -webkit-transform 0.25s ease-in-out;
+  }
+  .navbar #burger :nth-child(1) {
+    top: 2px;
+  }
+  .navbar #burger :nth-child(2), .navbar #burger :nth-child(3) {
+    top: 16px;
+  }
+  .navbar #burger :nth-child(4) {
+    top: 30px;
+  }
+  .navbar .make-x {
+    overflow: hidden;
+  }
+  .navbar .make-x :nth-child(1) {
+    top: -7px !important;
+    -webkit-transform: rotate(0) !important;
+            transform: rotate(0) !important;
+    opacity: 0;
+  }
+  .navbar .make-x :nth-child(2) {
+    top: 16px !important;
+    -webkit-transform: rotate(45deg) !important;
+            transform: rotate(45deg) !important;
+  }
+  .navbar .make-x :nth-child(3) {
+    top: 16px !important;
+    -webkit-transform: rotate(-45deg) !important;
+            transform: rotate(-45deg) !important;
+  }
+  .navbar .make-x :nth-child(4) {
+    top: 40px !important;
+    opacity: 0;
+  }
+  .navbar ul {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    position: absolute;
+    top: 75px;
+    left: 0;
+    height: calc(100vh - 75px);
+    width: 100%;
+    padding: 0;
+    -webkit-box-shadow: -2px 50px 16px #010A10, 100% 2px 16px #010A10;
+            box-shadow: -2px 50px 16px #010A10, 100% 2px 16px #010A10;
+  }
+  .navbar ul li {
+    width: 100%;
+    background-color: rgba(50, 50, 50, 0.9);
+    border-bottom: rgba(0, 0, 0, 0.4) 2px solid;
+  }
+  .navbar ul li:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+  .navbar ul #shop-anchor {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-rows: auto auto;
+        grid-template-rows: auto auto;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    text-align: center;
+    width: 100%;
+    border-bottom: rgba(0, 0, 0, 0.4) 2px solid;
+    cursor: pointer;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+  }
+  .navbar ul #shop-anchor .open-span {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    height: calc((100vh - 75px)/7);
+  }
+  .navbar ul #shop-anchor .open-span::after {
+    content: "\25BC";
+    padding-left: 5px;
+  }
+  .navbar ul #shop-anchor .close-span {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    height: calc((100vh - 75px)/7);
+  }
+  .navbar ul #shop-anchor .close-span::after {
+    content: "\25B2";
+    padding-left: 5px;
+  }
+  .navbar ul #shop-anchor #shop-dropdown {
+    position: relative;
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-rows: auto auto auto;
+        grid-template-rows: auto auto auto;
+    -ms-grid-columns: 50% 50%;
+        grid-template-columns: 50% 50%;
+    top: 0;
+    width: 100vw;
+    -webkit-box-shadow: none;
+            box-shadow: none;
+    border-top: rgba(0, 0, 0, 0.4) 2px solid;
+    background-color: rgba(50, 50, 50, 0.7);
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+  }
+  .navbar ul #shop-anchor #shop-dropdown a {
+    height: calc((100vh - 75px)/7/2);
+    border-bottom: rgba(0, 0, 0, 0.4) 2px solid;
+    padding: 0;
+  }
+  .navbar ul #shop-anchor #shop-dropdown a:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  .navbar ul #shop-anchor #shop-dropdown :nth-child(1), .navbar ul #shop-anchor #shop-dropdown :nth-child(3), .navbar ul #shop-anchor #shop-dropdown :nth-child(5) {
+    border-right: rgba(0, 0, 0, 0.4) 2px solid;
+  }
+  .navbar ul #shop-anchor #shop-dropdown :nth-child(5), .navbar ul #shop-anchor #shop-dropdown :nth-child(6) {
+    border-bottom: none;
+  }
+  .navbar ul #shop-anchor:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+  .navbar ul #shop-anchor:hover #shop-dropdown {
+    display: -ms-grid;
+    display: grid;
+  }
+  .hide {
+    display: none !important;
+  }
+  .not-faded {
+    -webkit-box-shadow: 0px 0px 16px black;
+            box-shadow: 0px 0px 16px black;
+    background-color: rgba(200, 200, 200, 0.3);
+    border-bottom: none;
+  }
 }
 /*# sourceMappingURL=App.css.map */

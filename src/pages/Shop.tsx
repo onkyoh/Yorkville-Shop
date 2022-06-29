@@ -233,9 +233,8 @@ useEffect(() => {
                 <h4>Stock: {currentShoe.maxQuantity}</h4>
               </div>
               <ul>
-                  {sizes.map((size: string, i) => (
+                  {sizes.map((size: string) => (
                     <li key={size} onClick={(e) => handleSizeDetails(e)} style={size === currentShoe.size ? {backgroundColor: "#010A10", color: "#FFFBF2"} : {}}>{size}</li>
-                  // TODO: add href/active class to sizes
                   ))}
               </ul>
               <button className="add-to-cart" onClick={handleAddToCart} disabled={currentShoe.size ? false : true}>ADD TO CART</button>

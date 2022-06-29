@@ -6,23 +6,11 @@ interface IProps {
   currentUser: string
 }
 
-interface IOrderItem {
-  id: string
-  totalPrice: number
-  paid?: boolean
-  orders: {
-    name: string
-    size: string
-    quantity: number
-    price: number
-    maxQuantity: number
-  }
-}
-
 interface IOrders {
   id: string
   totalPrice: number
   paid: boolean
+  timePlaced?: string
   orders: {
     name: string
     size: string
@@ -54,8 +42,6 @@ const Orders = ({currentUser}: IProps) => {
     }
     setPaidOrders([...tempPaid])
     setUnpaidOrders([...tempUnpaid])
-    console.log(tempPaid)
-    console.log(tempUnpaid)
   }
   
   const handleShowList = (e: any) => {
@@ -64,7 +50,6 @@ const Orders = ({currentUser}: IProps) => {
     } else {
       e.target.parentElement.className = "open-list"
     }
-    console.log(e.target.parentElement)
   }
 
   useEffect(() => {
@@ -75,7 +60,7 @@ const Orders = ({currentUser}: IProps) => {
 
   return (
     <div className='orders'>
-      {(paidOrders.length == 0 && unpaidOrders.length == 0) ? 
+      {(paidOrders.length === 0 && unpaidOrders.length === 0) ? 
       <h3>No previous orders</h3>  
         :
       <>

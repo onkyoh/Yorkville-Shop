@@ -5,7 +5,6 @@ import {
     signInWithEmailAndPassword,
 } from 'firebase/auth'
 import { setDoc, doc} from 'firebase/firestore'
-import { Link } from 'react-router-dom'
 
 interface IProps {
     setCurrentUser: React.Dispatch<SetStateAction<string>>
