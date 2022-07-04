@@ -32,7 +32,7 @@ const Main = ({brandChange, currentUser, setCurrentUser}: IProps) => {
 
   return (
     <Routes>
-      <Route path='/' element={<Home/>}></Route>
+      <Route path='/' element={<Home currentUser={currentUser}/>}></Route>
       <Route path='/Shop' element={<Shop brandChange={brandChange} currentUser={currentUser}/>}></Route>
       <Route path='/Cart' element={<Cart cart={cart} setCart={setCart} currentUser={currentUser}/>}></Route>
       <Route path='/Orders' element={<Orders currentUser={currentUser}/>}></Route>

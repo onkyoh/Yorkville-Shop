@@ -49,6 +49,21 @@ const Shop = ({brandChange, currentUser}: IProps) => {
   const [brand, setBrand] = useState<string>("")
   const [shopImages, setShopImages] = useState<IShopImages[]>([])
 
+const handleHomeItem = async(chosenItem: string) => {
+  const brandsList: string[] = ["Jordan", "Nike", "Adidas", "Essentials", "Test"]
+    for (let i = 0; i < brandsList.length; i++) {
+      const stock: any = await getDoc(doc(db, 'inventory', brandsList[i]))
+      var stockName: string[] = Object.keys(stock.data())
+      var stockImg: IShopImages[] = Object.values(stock.data())
+      const idx = stockName.findIndex(name => name === chosenItem)
+      if (idx > -1) {
+        setShop([chosenItem])
+        const tempImages = [{img: stockImg[idx].img, Size: ""}]
+        setShopImages([...tempImages])
+        setBrand(brandsList[i])
+      }
+  }
+}
 
 const handleGetShop = async (chosenBrand: string) => {
   if (chosenBrand === "All") {
@@ -206,14 +221,21 @@ const newMenArray = tempMenArray.map((size: number) => JSON.stringify(size))
 }
 
 useEffect(() => {
-  const chosenBrand = window.localStorage.getItem('brand')
-  if (typeof(chosenBrand) === 'string' ) {
-    setBrand(() => (chosenBrand!))
+  const chosenItem = window.localStorage.getItem('item') 
+  console.log(chosenItem)
+  if (chosenItem) {
+    handleHomeItem(chosenItem)
+    window.localStorage.setItem('item', "")
   } else {
-    setBrand(() => "Jordan")
-  }
+  const chosenBrand = window.localStorage.getItem('brand')
+    if (typeof(chosenBrand) === 'string' ) {
+      setBrand(() => (chosenBrand!))
+    } else {
+      setBrand(() => "Jordan")
+    }
   handleGetShop(chosenBrand!)
-  setSingleFocus(false)
+}
+setSingleFocus(false)
 }, [brandChange])
 
   return (
