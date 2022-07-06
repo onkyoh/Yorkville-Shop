@@ -38,22 +38,20 @@ const Orders = ({currentUser}: IProps) => {
     const userDoc: DocumentSnapshot<DocumentData> | undefined = await getDoc(doc(db, 'users', currentUser))
     if (userDoc.data() && userDoc.data()!.orders) {
       const orderArray = [...userDoc.data()!.orders]
-      var tempPaid: IOrders['orders'] = []
-      var tempUnpaid: IOrders['orders'] = []
+      let tempPaid: IOrders['orders'] = []
+      let tempUnpaid: IOrders['orders'] = []
       for (let i = 0; i < orderArray.length; i++) {
         if (orderArray[i].paid) {
           tempPaid = [...tempPaid, orderArray[i]]
         } else {
           tempUnpaid = [...tempUnpaid, orderArray[i]]
-        }
-        
+        } 
       }
       setPaidOrders([...tempPaid])
       setUnpaidOrders([...tempUnpaid])
     } else {
       console.log('error retrieving orders')
     }
-
   }
   
   const handleShowList = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
@@ -90,7 +88,7 @@ const Orders = ({currentUser}: IProps) => {
               <ol>
                 <span onClick={(e) => handleShowList(e)}> Items: &#9660;</span>
                 {order.items.map((item: IItems) => (
-                  <li>Name: {item.name}, Price: {item.price}, Quantity: {item.quantity}</li>
+                  <li>Name: {item.name}, Price: ${item.price}, Quantity: {item.quantity}</li>
                 ))}
               </ol> 
             </li>

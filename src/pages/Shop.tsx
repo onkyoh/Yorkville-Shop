@@ -47,14 +47,11 @@ interface IShop {
 }
 
 
-
-
-
 const Shop = ({brandChange, currentUser}: IProps) => {
 
   const [shop, setShop] = useState<IShop['item']>([])
   const [sizes, setSizes] = useState<string[]>([])
-  const [sizesDetail, setSizesDetail] = useState<any>([])
+  const [sizesDetail, setSizesDetail] = useState<[string, {Price: number, Quantity: number}][]>([])
   const [singleFocus, setSingleFocus] = useState(false)
   const [currentShoe, setCurrentShoe] = useState<ICurrentShoe>({
     name: "",

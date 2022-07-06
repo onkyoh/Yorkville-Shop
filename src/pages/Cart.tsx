@@ -3,6 +3,7 @@ import { db } from '../firebase-config'
 import { doc, getDoc, updateDoc } from '@firebase/firestore'
 import { v4 as uuidv4 } from 'uuid'
 import Instructions from '../components/Instructions'
+import { DocumentSnapshot, DocumentData } from 'firebase/firestore'
 
 
 interface IProps {
@@ -103,8 +104,8 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
 
   const generateTime = async () => {
     try {
-      const timeFetch: any = await fetch("https://timeapi.io/api/Time/current/zone?timeZone=EST")
-      const timeResponse: any = await timeFetch.json()
+      const timeFetch = await fetch("https://salty-citadel-43385.herokuapp.com/https://timeapi.io/api/Time/current/zone?timeZone=EST")
+      const timeResponse = await timeFetch.json()
       return timeResponse.dateTime
     } catch (e: any) {
       console.log(e.message)
@@ -180,19 +181,21 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
       isValid = validateAddress(shipmentAddress)
     }
 
-
     if (isValid) {
     try {
-      const userDoc: any = await getDoc(doc(db, 'users', currentUser))
-      var oldOrders = (userDoc.data().orders)
+      const userDoc: DocumentSnapshot<DocumentData> | undefined  = await getDoc(doc(db, 'users', currentUser))
+      if (!userDoc.data()) {
+        console.log("error retrieving user data")
+        return
+      }
+      var oldOrders = (userDoc.data()!.orders)
       const orderId: string = generateId();
-      const timePlaced: any = generateTime();
-      var newOrder: IOrder['orders'] = { id: orderId, items: cart, totalPrice: totalPrice, paid: false, timePlaced: timePlaced}
-
+      const timePlaced: string = await generateTime();
+      const newOrder: IOrder['orders'] = { id: orderId, items: cart, totalPrice: totalPrice, paid: false, timePlaced: timePlaced }
+      console.log(newOrder)
       await updateDoc((doc(db, 'users', currentUser)), {
         orders: [...oldOrders, newOrder]
       })
-
       await updateDoc((doc(db, 'users', currentUser)), {
         cart: []
       })
@@ -329,7 +332,6 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
             <h1>ORDER PRICE: ${totalPrice}</h1>
             <p onClick={() => handleModal("show")}>Instructions</p>
           </div>
-       
           <Instructions handleModal={handleModal} ship={ship}/> 
         </>
       }
@@ -340,3 +342,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
 }
 
 export default Cart
+
+function dateTime(dateTime: any) {
+  throw new Error('Function not implemented.')
+}
