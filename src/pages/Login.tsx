@@ -31,12 +31,13 @@ const Login = ({setCurrentUser}: IProps) => {
             createUser()
             setCurrentUser(cred.user.uid)
             console.log(cred.user.uid)
+            window.location.pathname = "/"
         }
         catch (error: any) {
             setError(error.message)
             console.log(error.message)
         }
-        window.location.pathname = "/"
+
      
     }
 
@@ -46,12 +47,13 @@ const Login = ({setCurrentUser}: IProps) => {
             const cred = await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
             setCurrentUser(cred.user.uid)
             console.log('logged in')
+            window.location.pathname = "/"
         }
         catch (error: any) {
             setError(error.message)
             console.log(error.message)
         }
-        window.location.pathname = "/"
+  
     }
 
     const handleNeedAccount = () => {
@@ -74,7 +76,7 @@ const Login = ({setCurrentUser}: IProps) => {
             <input type="email" id="email-register" value={registerEmail} onChange={(e) => setRegisterEmail(e.target.value)}/>
             <label htmlFor="password-register">Password</label>
             <input type="password" id="password-register" value={registerPassword} onChange={(e) => setRegisterPassword(e.target.value)}/>
-            <button onClick={(e) => register(e)}>Create User</button>
+            <button onClick={(e) => register(e)}>REGISTER</button>
             <p>Already have an account?<span onClick={handleNeedAccount}> Click Here.</span></p>
         </form>
         :
@@ -85,7 +87,7 @@ const Login = ({setCurrentUser}: IProps) => {
             <input type="email" id="email-login" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)}/>
             <label htmlFor="password-login">Password</label>
             <input type="password" id="password-login" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)}/>
-            <button onClick={(e) => login(e)}>Login</button>
+            <button onClick={(e) => login(e)}>LOGIN</button>
             <p>Need an account?<span onClick={handleNeedAccount}> Click Here.</span></p>
         </form>
         }

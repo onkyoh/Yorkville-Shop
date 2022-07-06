@@ -249,7 +249,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
           <h1>No items in cart...</h1>  
             :
           <> 
-          {cart.length === 0 ? null : <button onClick={() => setCheckout(true)}>Go to checkout</button>}
+          {cart.length === 0 ? null : <button onClick={() => setCheckout(true)}>GO TO CHECKOUT</button>}
           <span>{cartError}</span>
           <ul>
             {cart.map((item: any) => (
@@ -266,26 +266,20 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
       <>
       {!paid ?
       <div id='buy-container'>
-        <button id="back-to-cart" onClick={handleGoToCheckout}>Back</button>
+        <button id="back-to-cart" className="back-button" onClick={handleGoToCheckout}>&#9664; Back</button>
         <form>
           <h2>Enter Shipping Address</h2>
           <span>{error}</span>
           <section>
-            <div className='delivery-method'>
-              <div>
-                <input type="radio" name="Delivery" value="pickup" id="pickup" className="radio" onChange={() => handleShip(false)}/>
-                <label htmlFor="pickup">Pickup in Toronto</label>
-              </div>
-              {!ship ? <p onClick={() => handleModal("show")}>Pickup instructions</p> : null}
+            <div className='method'>
+              <input type="radio" name="Delivery" value="pickup" id="pickup" className="radio" onChange={() => handleShip(false)}/>
+              <label htmlFor="pickup">Pickup in Toronto</label>
             </div>
-          
-            <div className='delivery-method'>
-              <div >
-                <input type="radio" name="Delivery" value="ship" id="ship" className="radio" onChange={() => handleShip(true)}/>
-                <label htmlFor="ship">Ship + $15</label>
-              </div>
-              {ship ? <p onClick={() => handleModal("show")}>Shipping instructions</p> : null}
+            <div className='method'>
+              <input type="radio" name="Delivery" value="ship" id="ship" className="radio" onChange={() => handleShip(true)}/>
+              <label htmlFor="ship">Ship + $15</label>
             </div>
+            {ship ? <p onClick={() => handleModal("show")}>Shipping instructions</p> : <p onClick={() => handleModal("show")}>Pickup instructions</p>}
           </section>
        
           {ship ? 

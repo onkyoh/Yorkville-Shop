@@ -24,11 +24,7 @@ $dark-gray: rgba(100, 100, 100, 1);
 }
 
 body {
-    background: url("../pictures/yorkville\ checkout\ background.jpg");
-    ::backdrop {
-        background-color: rgba(0, 0, 0, 0.7);
-        background-color: #d60407;
-    }
+    background: url("../pictures/yorkvilleBG_Dark.png");
 }
 
   
@@ -143,8 +139,6 @@ body {
     .home-container {
         display: grid;
         grid-template-rows: auto auto auto;
-        background: rgb(241,241,241);
-        background: linear-gradient(150deg, rgba(150,150,150, 0.6) 0%, rgba(0,0,0,0.6) 100%); 
         > section {
             @include flexCenter();
             flex-direction: column;
@@ -313,11 +307,17 @@ body {
             background-color: $base-gray;
         }
     }
-    #back-to-shop {
-        color: $base-black;
+    .back-button {
         position: fixed;
-        top: 85px;
-        left: 10px;
+        top: 80px;
+        left: 5px;
+        cursor: pointer;
+        background: none;
+        outline: none;
+        border: none;
+        color: $base-white;
+        font-size: 1.3em;
+        text-shadow: 0px 0px 4px $base-black
     }
     #single-focus-container {
         position: absolute;
@@ -375,7 +375,7 @@ body {
                 list-style: none;
                 display: grid;
                 grid-template-columns: auto auto auto auto;
-                gap: 5px;
+                row-gap: 10px;
                 max-width: 300px;
                 li {
                     outline: 1px solid $base-black;
@@ -383,7 +383,9 @@ body {
                     font-size: 1.2em;
                     text-align: center;
                     cursor: pointer;
-                    transition: border 0.25s;
+                    margin: 0 5px;
+                    user-select: none;
+                    border: none;
                     &:hover {
                         outline: 2px solid $base-black;
                     }
@@ -420,12 +422,23 @@ body {
             }
             label {
                 font-size: 1.5em;
-                width: 80%;
+                width: 100%;
                 color: $base-white;
                 text-shadow: 0px 0px 4px $base-black;
             }
+            > span {
+                font-size: 1.3em;
+                color: $base-red;
+                text-shadow: none;
+                background-color: #e6b3b4;
+                outline: none;
+                padding: 0 2.5%;
+                max-width: 100%;
+                border-radius: 5px;
+                margin-bottom: 0.5em;
+            }
             input {
-                width: 80%;
+                width: 100%;
                 height: 3em;
                 padding-left: 1em;
                 font-size: 1em;
@@ -439,13 +452,14 @@ body {
                 }
             }
             button {
-                padding: 0.5em 1.3em;
-                font-size: 1.2em;
+                padding: 0.5em 1.5em;
+                font-size: 1.3em;
+                font-weight: bold;
+                border-radius: 25px;
                 cursor: pointer;
                 border: none;
                 background-color: $base-gray;
                 color: $base-black;
-                border-radius: 5px;
                 margin-bottom: 1.3em;
                 transition: background-color 0.5s;
                 box-shadow: 0px 0px 8px $base-black;
@@ -483,6 +497,19 @@ body {
             font-size: 1.5em;
             color: $base-red;
         }
+        > button {
+            font-size: 1.2em;
+            padding: 0.5em 1.5em;
+            font-weight: bold;
+            border: none;
+            box-shadow: 0px 0px 8px $base-black;
+            cursor: pointer;
+            border-radius: 25px;
+            &:hover {
+                background-color: $base-white;
+     
+            }
+        }
        ul {
         list-style: none;
         li {
@@ -491,13 +518,13 @@ body {
             margin: 2em;
             padding: 1.5em;
             border-radius: 15px;
-            
             background-color: $base-glass;
             box-shadow: 0px 0px 16px $base-black;
             p {
                 font-size: 1.2em;
                 width: 80%;
                 color: $base-white;
+                text-shadow: 0px 0px 4px $base-black
             }
             button {
                 @include flexCenter();
@@ -518,14 +545,22 @@ body {
        }
     }
     h1 {
-        font-size: 3em;
+        font-size: 2em;
         color: $base-white;
         text-shadow: 0px 0px 6px $base-black;
     }
     .instruction-details {
         width: 90%;
-        font-size: calc(clamp(0.4em, 2vw , 1.2em));
+        font-size: calc(clamp(0.6em, 2vw , 1.2em));
+        word-break: break-all;
         text-align: center;
+        p {
+            color: $base-white;
+            text-shadow: 0px 0px 4px $base-black;
+            font-size: 2em;
+            text-decoration: underline;
+            cursor: pointer;
+        }
     }
     #buy-container {
         width: 100%;
@@ -536,37 +571,37 @@ body {
             color: $base-white;
             font-size: 2em;
         }
-        #back-to-cart {
-            position: absolute;
-            top: 75px;
-            left: 0;
+        .back-button {
+            position: fixed;
+            top: 80px;
+            left: 5px;
+            cursor: pointer;
+            background: none;
+            outline: none;
+            border: none;
+            color: $base-white;
+            font-size: 1.3em;
+            text-shadow: 0px 0px 4px $base-black
         }
         section {
             @include flexCenter();
-            justify-content: space-around;
             width: 100%;
-            .delivery-method {
-                display: flex;
-                flex-direction: column;
-                gap: 0;
-                align-items: flex-start;
-                width: fit-content;
-                div {
-                    display: flex;
-                    flex-direction: row; 
-                    gap: 1vw;
-                 
-                    label {
-                        font-size: calc(clamp(1em, 1vw,1.2em))
+            flex-wrap: wrap;
+            .method {
+                @include flexCenter();
+                width: 50%;
+                label {
+                    font-size: calc(clamp(1em, 1vw,1.2em));
+                    width: fit-content;
                     }
-                }
-                p {
-                    font-size: calc(clamp(0.95em, 1vw,1.2em));
-                    width: max-content;
-                    cursor: pointer;
-
             }
-        }
+            p {
+                font-size: 1.3em;
+                width: 100%;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: underline;
+            }
        
         }
         form {
@@ -650,26 +685,22 @@ body {
                 }
             }
             button {
-                color: $base-black;
-                font-size: 1.5em;
-                border-radius: 50px;
-                padding: 0 5%;
-                background-color: $base-white;
+                border-radius: 25px;
+                font-size: 1.4em;
+                padding: 0.3em 1.5em;
+                background-color: $base-gray;
                 box-shadow: 0px 0px 8px $base-black;
                 border: none;
                 text-shadow: none;
                 font-weight: bold;
                 cursor: pointer;
-                transition: transform 0.25s, box-shadow 0.25s;
                 &:hover {
-                    transform: scale(110%);
-                    box-shadow: 0px 0px 16px $base-black;
+                    background-color: $base-white;
                 }
                 &:disabled {
                     opacity: 0.5;
                     &:hover {
-                        transform: none;
-                        box-shadow: 0px 0px 8px $base-black;
+                        background-color: $base-gray;
                     }
                 }
             }

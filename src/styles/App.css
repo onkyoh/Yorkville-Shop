@@ -10,17 +10,7 @@
 }
 
 body {
-  background: url("../pictures/yorkville checkout background.jpg");
-}
-
-body ::-webkit-backdrop {
-  background-color: rgba(0, 0, 0, 0.7);
-  background-color: #d60407;
-}
-
-body ::backdrop {
-  background-color: rgba(0, 0, 0, 0.7);
-  background-color: #d60407;
+  background: url("../pictures/yorkvilleBG_Dark.png");
 }
 
 .navbar {
@@ -203,8 +193,6 @@ body ::backdrop {
   display: grid;
   -ms-grid-rows: auto auto auto;
       grid-template-rows: auto auto auto;
-  background: #f1f1f1;
-  background: linear-gradient(150deg, rgba(150, 150, 150, 0.6) 0%, rgba(0, 0, 0, 0.6) 100%);
 }
 
 .home .home-container > section {
@@ -478,11 +466,17 @@ body ::backdrop {
   background-color: #d6d5d5;
 }
 
-.shop #back-to-shop {
-  color: #010A10;
+.shop .back-button {
   position: fixed;
-  top: 85px;
-  left: 10px;
+  top: 80px;
+  left: 5px;
+  cursor: pointer;
+  background: none;
+  outline: none;
+  border: none;
+  color: #FFFBF2;
+  font-size: 1.3em;
+  text-shadow: 0px 0px 4px #010A10;
 }
 
 .shop #single-focus-container {
@@ -593,7 +587,7 @@ body ::backdrop {
   display: grid;
   -ms-grid-columns: auto auto auto auto;
       grid-template-columns: auto auto auto auto;
-  gap: 5px;
+  row-gap: 10px;
   max-width: 300px;
 }
 
@@ -603,8 +597,12 @@ body ::backdrop {
   font-size: 1.2em;
   text-align: center;
   cursor: pointer;
-  -webkit-transition: border 0.25s;
-  transition: border 0.25s;
+  margin: 0 5px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: none;
 }
 
 .shop #single-focus-container #details-container ul li:hover {
@@ -661,13 +659,25 @@ body ::backdrop {
 
 .login .form-container form label {
   font-size: 1.5em;
-  width: 80%;
+  width: 100%;
   color: #FFFBF2;
   text-shadow: 0px 0px 4px #010A10;
 }
 
+.login .form-container form > span {
+  font-size: 1.3em;
+  color: #d60407;
+  text-shadow: none;
+  background-color: #e6b3b4;
+  outline: none;
+  padding: 0 2.5%;
+  max-width: 100%;
+  border-radius: 5px;
+  margin-bottom: 0.5em;
+}
+
 .login .form-container form input {
-  width: 80%;
+  width: 100%;
   height: 3em;
   padding-left: 1em;
   font-size: 1em;
@@ -687,13 +697,14 @@ body ::backdrop {
 }
 
 .login .form-container form button {
-  padding: 0.5em 1.3em;
-  font-size: 1.2em;
+  padding: 0.5em 1.5em;
+  font-size: 1.3em;
+  font-weight: bold;
+  border-radius: 25px;
   cursor: pointer;
   border: none;
   background-color: #d6d5d5;
   color: #010A10;
-  border-radius: 5px;
   margin-bottom: 1.3em;
   -webkit-transition: background-color 0.5s;
   transition: background-color 0.5s;
@@ -757,6 +768,21 @@ body ::backdrop {
   color: #d60407;
 }
 
+.cart #cart-list > button {
+  font-size: 1.2em;
+  padding: 0.5em 1.5em;
+  font-weight: bold;
+  border: none;
+  -webkit-box-shadow: 0px 0px 8px #010A10;
+          box-shadow: 0px 0px 8px #010A10;
+  cursor: pointer;
+  border-radius: 25px;
+}
+
+.cart #cart-list > button:hover {
+  background-color: #FFFBF2;
+}
+
 .cart #cart-list ul {
   list-style: none;
 }
@@ -786,6 +812,7 @@ body ::backdrop {
   font-size: 1.2em;
   width: 80%;
   color: #FFFBF2;
+  text-shadow: 0px 0px 4px #010A10;
 }
 
 .cart #cart-list ul li button {
@@ -815,15 +842,24 @@ body ::backdrop {
 }
 
 .cart h1 {
-  font-size: 3em;
+  font-size: 2em;
   color: #FFFBF2;
   text-shadow: 0px 0px 6px #010A10;
 }
 
 .cart .instruction-details {
   width: 90%;
-  font-size: calc(clamp(0.4em, 2vw , 1.2em));
+  font-size: calc(clamp(0.6em, 2vw , 1.2em));
+  word-break: break-all;
   text-align: center;
+}
+
+.cart .instruction-details p {
+  color: #FFFBF2;
+  text-shadow: 0px 0px 4px #010A10;
+  font-size: 2em;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .cart #buy-container {
@@ -846,10 +882,17 @@ body ::backdrop {
   font-size: 2em;
 }
 
-.cart #buy-container #back-to-cart {
-  position: absolute;
-  top: 75px;
-  left: 0;
+.cart #buy-container .back-button {
+  position: fixed;
+  top: 80px;
+  left: 5px;
+  cursor: pointer;
+  background: none;
+  outline: none;
+  border: none;
+  color: #FFFBF2;
+  font-size: 1.3em;
+  text-shadow: 0px 0px 4px #010A10;
 }
 
 .cart #buy-container section {
@@ -862,49 +905,37 @@ body ::backdrop {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
   width: 100%;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
 
-.cart #buy-container section .delivery-method {
+.cart #buy-container section .method {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  gap: 0;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 50%;
+}
+
+.cart #buy-container section .method label {
+  font-size: calc(clamp(1em, 1vw,1.2em));
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
 }
 
-.cart #buy-container section .delivery-method div {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  gap: 1vw;
-}
-
-.cart #buy-container section .delivery-method div label {
-  font-size: calc(clamp(1em, 1vw,1.2em));
-}
-
-.cart #buy-container section .delivery-method p {
-  font-size: calc(clamp(0.95em, 1vw,1.2em));
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
+.cart #buy-container section p {
+  font-size: 1.3em;
+  width: 100%;
   cursor: pointer;
+  text-align: center;
+  text-decoration: underline;
 }
 
 .cart #buy-container form {
@@ -1035,28 +1066,20 @@ body ::backdrop {
 }
 
 .cart #buy-container form button {
-  color: #010A10;
-  font-size: 1.5em;
-  border-radius: 50px;
-  padding: 0 5%;
-  background-color: #FFFBF2;
+  border-radius: 25px;
+  font-size: 1.4em;
+  padding: 0.3em 1.5em;
+  background-color: #d6d5d5;
   -webkit-box-shadow: 0px 0px 8px #010A10;
           box-shadow: 0px 0px 8px #010A10;
   border: none;
   text-shadow: none;
   font-weight: bold;
   cursor: pointer;
-  -webkit-transition: -webkit-transform 0.25s, -webkit-box-shadow 0.25s;
-  transition: -webkit-transform 0.25s, -webkit-box-shadow 0.25s;
-  transition: transform 0.25s, box-shadow 0.25s;
-  transition: transform 0.25s, box-shadow 0.25s, -webkit-transform 0.25s, -webkit-box-shadow 0.25s;
 }
 
 .cart #buy-container form button:hover {
-  -webkit-transform: scale(110%);
-          transform: scale(110%);
-  -webkit-box-shadow: 0px 0px 16px #010A10;
-          box-shadow: 0px 0px 16px #010A10;
+  background-color: #FFFBF2;
 }
 
 .cart #buy-container form button:disabled {
@@ -1064,10 +1087,7 @@ body ::backdrop {
 }
 
 .cart #buy-container form button:disabled:hover {
-  -webkit-transform: none;
-          transform: none;
-  -webkit-box-shadow: 0px 0px 8px #010A10;
-          box-shadow: 0px 0px 8px #010A10;
+  background-color: #d6d5d5;
 }
 
 .modal {

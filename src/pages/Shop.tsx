@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { db } from '../firebase-config'
 import { doc, getDoc, updateDoc } from '@firebase/firestore'
+import { DocumentData, DocumentSnapshot } from 'firebase/firestore'
 
 interface IProps {
   brandChange: string
@@ -28,16 +29,32 @@ interface ICurrentShoe {
 }
 
 interface IShopImages {
-  Size: {}
+  Size?: {}
   img?: string
 }
+
+interface IShop {
+  item: {
+    name: string
+    img?: string
+    sizes?: {
+      size: {
+        Quantity: number
+        Price: number
+    }}
+  }[]
+
+}
+
+
+
 
 
 const Shop = ({brandChange, currentUser}: IProps) => {
 
-  const [shop, setShop] = useState<string[]>([])
+  const [shop, setShop] = useState<IShop['item']>([])
   const [sizes, setSizes] = useState<string[]>([])
-  const [sizesDetail, setSizesDetail] = useState<object[]>([])
+  const [sizesDetail, setSizesDetail] = useState<any>([])
   const [singleFocus, setSingleFocus] = useState(false)
   const [currentShoe, setCurrentShoe] = useState<ICurrentShoe>({
     name: "",
@@ -46,8 +63,6 @@ const Shop = ({brandChange, currentUser}: IProps) => {
     quantity: 0,
     maxQuantity: 0,
 })
-  const [brand, setBrand] = useState<string>("")
-  const [shopImages, setShopImages] = useState<IShopImages[]>([])
 
 const handleHomeItem = async(chosenItem: string) => {
   const brandsList: string[] = ["Jordan", "Nike", "Adidas", "Essentials", "Test"]
@@ -57,94 +72,101 @@ const handleHomeItem = async(chosenItem: string) => {
       var stockImg: IShopImages[] = Object.values(stock.data())
       const idx = stockName.findIndex(name => name === chosenItem)
       if (idx > -1) {
-        setShop([chosenItem])
-        const tempImages = [{img: stockImg[idx].img, Size: ""}]
-        setShopImages([...tempImages])
-        setBrand(brandsList[i])
+        setShop([{name: chosenItem, img: stockImg[idx].img}])
+        window.localStorage.setItem('item', brandsList[i])
       }
   }
 }
 
 const handleGetShop = async (chosenBrand: string) => {
+  let allStock: any[]= []
   if (chosenBrand === "All") {
     const brandsList: string[] = ["Jordan", "Nike", "Adidas", "Essentials"]
-    var allStock: any = []
-    var allImages: any = []
     for (let i = 0; i < brandsList.length; i++) {
-      const stock: any = await getDoc(doc(db, 'inventory', brandsList[i]))
-      var stockName: string[] = Object.keys(stock.data())
-      var stockImg: IShopImages[] = Object.values(stock.data())
-      allImages = [...allImages, stockImg]
-      allStock = [...allStock, stockName]
+      const stock: DocumentSnapshot<DocumentData> | undefined = await getDoc(doc(db, 'inventory', brandsList[i]))
+      if (stock.data()) {
+        const stockName: string[] = Object.keys(stock.data()!)
+        const stockImg: any[] = Object.values(stock.data()!)
+        let tempStock = []
+        for (let i = 0; i < stockName.length; i++) {
+          tempStock[i] = {name: stockName[i], img: stockImg[i].img, sizes: stockImg[i].Size}
+        }
+        allStock = [...allStock, ...tempStock]
+      } else {
+        console.log('error retrieiving inventory')
+      }
     }
-    allStock = [...allStock[0], ...allStock[1], ...allStock[2], allStock[3]]
-    allImages = [...allImages[0], ...allImages[1], ...allImages[2], allImages[3]]
-    setShopImages([...allImages])
     setShop([...allStock])
   } else {
-    const stock: any = await getDoc(doc(db, 'inventory', chosenBrand))
-    const stockName: string[] = Object.keys(stock.data())
-    const stockImg: IShopImages[] = Object.values(stock.data())
-    setShop([...stockName])
-    setShopImages([...stockImg])
-  }
-  }
-
-  const handleShoeSelection = async (e: any) => {
-    var stock: any;
-    if (brand === "All") {
-      const shoeName = e.target.innerHTML
-      const nameArray = shoeName.split(" ")
-        var shoeBrand: string;
-        if (nameArray[0] === "YEEZY") {
-          shoeBrand = "Adidas"
-        } else {
-          shoeBrand = nameArray[0]
+    const stock: DocumentSnapshot<DocumentData> | undefined = await getDoc(doc(db, 'inventory', chosenBrand))
+      if (stock.data()) {
+        const stockName: string[] = Object.keys(stock.data()!)
+        const stockImg: IShopImages[] = Object.values(stock.data()!)
+        let tempStock = []
+        for (let i = 0; i < stockName.length; i++) {
+          tempStock[i] = {name: stockName[i], img: stockImg[i].img, sizes: stockImg[i].Size}
         }
-        //determing which brand to get shoe data from depending on items name
-      stock = await getDoc(doc(db, 'inventory', shoeBrand))
-    } else {
-      stock = await getDoc(doc(db, 'inventory', brand))
-    } 
-    
-    var tempStock: [string, {Size: {}, img?: string}][] = Object.entries(stock.data())
+        allStock = [...allStock, ...tempStock]
+        setShop([...allStock])
+      } else {
+        console.log("error retrieving stock")
+      }
+    }
+  }
 
-    var idx = -1;
-    for (let i = 0; i < tempStock.length; i++ ) {
-      if (tempStock[i][0] === e.target.innerHTML) {
+  const handleShoeSelection = async (chosenShoe: string) => {
+    let tempShop = [...shop]
+    let idx = -1;
+    for (let i = 0; i < tempShop.length; i++ ) {
+      if (tempShop[i].name === chosenShoe) {
         idx = i;
       }
     }
+  
+    // turning indi shoe into array of its params => finding idx of size param 
+    // => turning size param into an array of sizes 
+    //and array of entries containing size + each sizes details
 
-    var selectedImg = tempStock[idx][1].img
-    var sizeArray: string[] = Object.keys(tempStock[idx][1].Size)
-    var sizeMap: any = Object.entries(tempStock[idx][1])
+    const tempObject = Object.entries(tempShop[idx])
+
+    let sizeArrayIdx = -1;
+ 
+    if (tempShop[idx]) {
+      sizeArrayIdx = tempObject.findIndex(param => param[0] === "sizes")
+    } else {
+      console.log("item does not have sizes")
+    }
+    if (sizeArrayIdx > -1) {
+      const sizeArray: string[] = Object.keys(tempObject[sizeArrayIdx][1])
+      const sizeData: [string, {Price: number, Quantity: number}][] = Object.entries(tempObject[sizeArrayIdx][1])
     
-    const idxOfSize = sizeMap.findIndex((array: any) => array[0] === "Size")
-    const tempSizeDetails = sizeMap[idxOfSize]
-    const sizeData = Object.entries(tempSizeDetails[1])
+      setSizesDetail([...sizeData])
+      handleOrderSizes([...sizeArray])
+      setCurrentShoe(({...currentShoe, name: chosenShoe, img: tempShop[idx].img, size: "", price: 0, maxQuantity: 0}))
+      setSingleFocus(true)
+    } else {
+      console.log("item does not have sizes")
+    }
 
-
-    
-    setSizesDetail([...sizeData])
-    handleOrderSizes([...sizeArray])
-    setCurrentShoe(({...currentShoe, name: e.target.innerHTML, img: selectedImg, size: "", price: 0, maxQuantity: 0}))
-    setSingleFocus(true)
   }
 
-  const handleSizeDetails = (e: any) => {
-    const idx = sizesDetail.findIndex((size: any) => size[0] === e.target.innerHTML)
-    const sizeValues:any = Object.values(sizesDetail[idx])
+  const handleSizeDetails = (chosenSize: string) => {
+    const idx: number = sizesDetail.findIndex((size: any) => size[0] === chosenSize)
+    const sizeValues: any = Object.values(sizesDetail[idx])
     setCurrentShoe(({...currentShoe, price: sizeValues[1].Price, maxQuantity: sizeValues[1].Quantity, size: sizeValues[0]}))
   }
 
   const handleAddToCart = async () => {
     const usersRef = doc(db, 'users', currentUser)
-    const usersDoc: any = await getDoc(usersRef)
-    var tempCart: ICart['cart'] = usersDoc.data().cart
+    const usersDoc: DocumentSnapshot<DocumentData> | undefined = await getDoc(usersRef)
+    if (!usersDoc.data() || !usersDoc.data()!.cart) {
+      console.log('error grabbing cart')
+      return
+    }
+    var tempCart: ICart['cart'] = usersDoc.data()!.cart
     let idx = tempCart.findIndex((item: ICurrentShoe) => item.name === currentShoe.name && item.size === currentShoe.size)
-    if (idx > -1) {
 
+    if (idx > -1) {
       if (currentShoe.quantity === currentShoe.maxQuantity) {
           console.log("No more stock")
           return
@@ -152,8 +174,6 @@ const handleGetShop = async (chosenBrand: string) => {
           currentShoe.quantity += 1;
           let shoeToAdd = currentShoe
           delete shoeToAdd.img
-           //add a currentShoe clone that doesnt have img parameter
-          //when imgs get added delete this
            tempCart[idx] = shoeToAdd
           await updateDoc(usersRef, {
             cart: [...tempCart]
@@ -164,76 +184,69 @@ const handleGetShop = async (chosenBrand: string) => {
       currentShoe.quantity = 1
       let shoeToAdd = currentShoe
       delete shoeToAdd.img
-      //add a currentShoe clone that doesnt have img parameter
       var newItemCart: ICart['cart'] = [...tempCart, shoeToAdd]
       await updateDoc(usersRef, {
         cart: [...newItemCart]
       })
       console.log("trigged when item added for first time")
     }
-    //after adding to cart clicking another size = no img
   }
 
 const handleOrderSizes = (arrayOfSizes: string[]) => {
   var juniorArray: string[] = []
   var womenArray: string[] = []
   var menArray: string[] = []
-  for (let i = 0; i < arrayOfSizes.length; i++) {
-    if (arrayOfSizes[i].includes('Y')) {
-      juniorArray = [...juniorArray, arrayOfSizes[i]]
-    }  else if (arrayOfSizes[i].includes('W')) {
-      womenArray = [...womenArray, arrayOfSizes[i]]
-    } else {
-      menArray = [...menArray, arrayOfSizes[i]]
-    }
- }
+    for (let i = 0; i < arrayOfSizes.length; i++) {
+      if (arrayOfSizes[i].includes('Y')) {
+        juniorArray = [...juniorArray, arrayOfSizes[i]]
+      }  else if (arrayOfSizes[i].includes('W')) {
+        womenArray = [...womenArray, arrayOfSizes[i]]
+      } else {
+        menArray = [...menArray, arrayOfSizes[i]]
+      }
+  }
 
-//turning sizes in number, ordering by size, then adding the necessary suffix at the end
+  //turning sizes in number, ordering by size, then adding the necessary suffix
 
- const newArrayJ = juniorArray.map(item => parseFloat(item))
- newArrayJ.sort(function(a, b){ 
-  return a - b
-})
+    const newArrayJ = juniorArray.map(item => parseFloat(item))
+    newArrayJ.sort(function(a, b){ 
+      return a - b
+    })
+      var newJuniorArray: string[] = []
+      for (let i = 0; i < newArrayJ.length; i++) {
+        newJuniorArray = [...newJuniorArray, (newArrayJ[i] + "Y")];
+      }
+    const newArrayW = womenArray.map(item => parseFloat(item))
+    newArrayW.sort(function(a, b){ 
+      return a - b
+    })
+      var newWomenArray: string[] = []
+      for (let i = 0; i < newArrayW.length; i++) {
+        newWomenArray = [...newWomenArray, (newArrayW[i] + "W")];
+      }
 
-var newJuniorArray: any = []
- for (let i = 0; i < newArrayJ.length; i++) {
-  newJuniorArray = [...newJuniorArray, (newArrayJ[i] + "Y")];
- }
-
-const newArrayW = womenArray.map(item => parseFloat(item))
- newArrayW.sort(function(a, b){ 
-  return a - b
-})
-
-var newWomenArray: any = []
- for (let i = 0; i < newArrayW.length; i++) {
-  newWomenArray = [...newWomenArray, (newArrayW[i] + "W")];
- }
-
-const tempMenArray = menArray.map(item => parseFloat(item))
- tempMenArray.sort(function(a, b){ 
-  return a - b
-})
-
-const newMenArray = tempMenArray.map((size: number) => JSON.stringify(size))
-
-  setSizes([...newJuniorArray, ...newWomenArray, ...newMenArray])
+    const tempMenArray: number[] = menArray.map(item => parseFloat(item))
+    tempMenArray.sort(function(a, b){ 
+      return a - b
+    })
+      const newMenArray = tempMenArray.map((size: number) => JSON.stringify(size))
+        setSizes([...newJuniorArray, ...newWomenArray, ...newMenArray])
 }
 
 useEffect(() => {
   const chosenItem = window.localStorage.getItem('item') 
-  console.log(chosenItem)
+  const chosenBrand = window.localStorage.getItem('brand')
+  console.log(chosenBrand)
   if (chosenItem) {
     handleHomeItem(chosenItem)
     window.localStorage.setItem('item', "")
   } else {
-  const chosenBrand = window.localStorage.getItem('brand')
-    if (typeof(chosenBrand) === 'string' ) {
-      setBrand(() => (chosenBrand!))
-    } else {
-      setBrand(() => "Jordan")
-    }
-  handleGetShop(chosenBrand!)
+      if (chosenBrand) {
+        handleGetShop(chosenBrand)
+      } else {
+        handleGetShop("All")
+      }
+
 }
 setSingleFocus(false)
 }, [brandChange])
@@ -255,20 +268,20 @@ setSingleFocus(false)
                 <h4>Stock: {currentShoe.maxQuantity}</h4>
               </div>
               <ul>
-                  {sizes.map((size: string) => (
-                    <li key={size} onClick={(e) => handleSizeDetails(e)} style={size === currentShoe.size ? {backgroundColor: "#010A10", color: "#FFFBF2"} : {}}>{size}</li>
+                  {sizes.map((size) => (
+                    <li key={size} onClick={() => handleSizeDetails(size)} style={size === currentShoe.size ? {backgroundColor: "#010A10", color: "#FFFBF2"} : {}}>{size}</li>
                   ))}
               </ul>
               <button className="add-to-cart" onClick={handleAddToCart} disabled={currentShoe.size ? false : true}>ADD TO CART</button>
             </div>
           </div>
-          <button id="back-to-shop" onClick={() => setSingleFocus(false)}>Back</button>
+          <button id="back-to-shop" className="back-button" onClick={() => setSingleFocus(false)}>&#9664; Back</button>
           </> 
           :
-          shop.map((shoe: string, i: number) => (
-            <div key={i}  className="item-container">
-              <img src={shopImages[i].img} alt="shoe" />
-              <p onClick={(e) => handleShoeSelection(e)}>{shoe}</p>
+          shop.map((item) => (
+            <div key={item.name} className="item-container">
+              <img src={item.img || ""} alt={`${item.name} Product Pic`} />
+              <p onClick={() => handleShoeSelection(item.name)}>{item.name}</p>
             </div>
           )) 
           }

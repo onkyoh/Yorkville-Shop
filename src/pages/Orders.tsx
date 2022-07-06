@@ -1,24 +1,31 @@
-import { useEffect, useState } from "react"
+import React, { ReactNode, useEffect, useState } from "react"
 import { db } from '../firebase-config'
 import { doc, getDoc } from '@firebase/firestore'
+import { DocumentData, DocumentSnapshot } from "firebase/firestore"
 
 interface IProps {
   currentUser: string
 }
 
-interface IOrders {
+interface IItems {
+  name: string
+  size: string
+  quantity: number
+  price: number
+  maxQuantity: number
+}
+
+interface IOrder {
   id: string
   totalPrice: number
   paid: boolean
   timePlaced?: string
-  orders: {
-    name: string
-    size: string
-    quantity: number
-    price: number
-    maxQuantity: number
-  }[];
-  setOrders: React.Dispatch<React.SetStateAction<IOrders['orders']>>;
+  items: IItems[];
+}
+
+interface IOrders {
+  orders: IOrder[]
+  setOrders: React.Dispatch<React.SetStateAction<IOrders>>;
 }
 
 const Orders = ({currentUser}: IProps) => {
@@ -28,27 +35,35 @@ const Orders = ({currentUser}: IProps) => {
 
 
   const handleGetOrders = async () => {
-    const userDoc: any = await getDoc(doc(db, 'users', currentUser))
-    const orderArray = [...userDoc.data().orders]
-    var tempPaid: IOrders['orders'] = []
-    var tempUnpaid: IOrders['orders'] = []
-    for (let i = 0; i < orderArray.length; i++) {
-      if (orderArray[i].paid) {
-        tempPaid = [...tempPaid, orderArray[i]]
-      } else {
-        tempUnpaid = [...tempUnpaid, orderArray[i]]
+    const userDoc: DocumentSnapshot<DocumentData> | undefined = await getDoc(doc(db, 'users', currentUser))
+    if (userDoc.data() && userDoc.data()!.orders) {
+      const orderArray = [...userDoc.data()!.orders]
+      var tempPaid: IOrders['orders'] = []
+      var tempUnpaid: IOrders['orders'] = []
+      for (let i = 0; i < orderArray.length; i++) {
+        if (orderArray[i].paid) {
+          tempPaid = [...tempPaid, orderArray[i]]
+        } else {
+          tempUnpaid = [...tempUnpaid, orderArray[i]]
+        }
+        
       }
-      
+      setPaidOrders([...tempPaid])
+      setUnpaidOrders([...tempUnpaid])
+    } else {
+      console.log('error retrieving orders')
     }
-    setPaidOrders([...tempPaid])
-    setUnpaidOrders([...tempUnpaid])
+
   }
   
-  const handleShowList = (e: any) => {
-    if (e.target.parentElement.className === "open-list") {
-      e.target.parentElement.className = ""
-    } else {
-      e.target.parentElement.className = "open-list"
+  const handleShowList = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    const target = e.target as HTMLSpanElement
+    if (target) {
+      if (target.parentElement!.className === "open-list") {
+        target.parentElement!.className = ""
+      } else {
+        target.parentElement!.className = "open-list"
+      }
     }
   }
 
@@ -61,30 +76,40 @@ const Orders = ({currentUser}: IProps) => {
   return (
     <div className='orders'>
       {(paidOrders.length === 0 && unpaidOrders.length === 0) ? 
-      <h3>No previous orders</h3>  
+      <h3>No previous orders...</h3>  
         :
       <>
         <h3>Unpaid</h3>
         <ul id="orders-list">
-          {unpaidOrders.map((order: any) => (
+          {unpaidOrders.map((order: IOrder) => (
             <li key={order.id} id="orders-item">
-              <span> <div> #: {order.id}, </div><div>Price: ${order.totalPrice}, </div></span>
-              <ol><span onClick={(e) => handleShowList(e)}> Items: &#9660;</span>
-              {order.items.map((shoe: any) => (
-                <li>Name: {shoe.name}, Price: {shoe.price}, Quantity: {shoe.quantity}</li>
-              ))}</ol> 
+              <span>
+                <div> #: {order.id}, </div>
+                <div>Price: ${order.totalPrice}, </div>
+              </span>
+              <ol>
+                <span onClick={(e) => handleShowList(e)}> Items: &#9660;</span>
+                {order.items.map((item: IItems) => (
+                  <li>Name: {item.name}, Price: {item.price}, Quantity: {item.quantity}</li>
+                ))}
+              </ol> 
             </li>
           ))}
         </ul>
         <h3>Paid</h3>
         <ul id="orders-list">
-          {paidOrders.map((order: any) => (
+          {paidOrders.map((order: IOrder) => (
             <li key={order.id} id="orders-item">
-            <span> <div> #: {order.id}, </div><div>Price: ${order.totalPrice}, </div></span>
-            <ol><span onClick={(e) => handleShowList(e)}> Items: &#9660;</span>
-            {order.items.map((shoe: any) => (
-              <li>Name: {shoe.name}, Price: {shoe.price}, Quantity: {shoe.quantity}</li>
-            ))}</ol> 
+            <span>
+              <div> #: {order.id}, </div>
+              <div>Price: ${order.totalPrice}, </div>
+            </span>
+            <ol>
+              <span onClick={(e) => handleShowList(e)}> Items: &#9660;</span>
+              {order.items.map((item: IItems) => (
+                <li>Name: {item.name}, Price: {item.price}, Quantity: {item.quantity}</li>
+               ))}
+            </ol> 
           </li>
           ))}
         </ul>
