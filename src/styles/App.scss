@@ -21,6 +21,7 @@ $dark-gray: rgba(100, 100, 100, 1);
     box-sizing: border-box;
     color: $base-black;
     font-family: 'Titillium Web', sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -95,6 +96,7 @@ body {
         #shop-anchor {
             @include flexCenter();
             width: 120px;
+            user-select: none;
             span {
                 color: $base-white;
                 &::after{
@@ -289,6 +291,7 @@ body {
         justify-content: space-between;
         background-color: $base-white;
         box-shadow: 0px 0px 16px $base-black;
+        cursor: pointer;
         p {
             font-family: 'Tillana', cursive;
             font-size: calc(clamp(1.1em, 2vw, 1.4em));
@@ -299,7 +302,6 @@ body {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis; 
-            cursor: pointer;
         }
         img {
             width: calc(100% - 3em);
@@ -310,7 +312,7 @@ body {
     }
     .back-button {
         position: fixed;
-        top: 80px;
+        top: 75px;
         left: 5px;
         cursor: pointer;
         background: none;
@@ -552,8 +554,7 @@ body {
     }
     .instruction-details {
         width: 90%;
-        font-size: calc(clamp(0.6em, 2vw , 1.2em));
-        word-break: break-all;
+        font-size: calc(clamp(0.72em, 3vw , 1.2em));
         text-align: center;
         p {
             color: $base-white;
@@ -574,7 +575,7 @@ body {
         }
         .back-button {
             position: fixed;
-            top: 80px;
+            top: 75px;
             left: 5px;
             cursor: pointer;
             background: none;
@@ -910,7 +911,6 @@ body {
                 width: 100%;
                 border-bottom: rgba(0, 0, 0, 0.4) 2px solid;
                 cursor: pointer;
-                user-select: none;
                 .open-span {
                     @include flexCenter();
                     height: calc((100vh - 75px)/7);

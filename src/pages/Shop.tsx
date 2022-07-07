@@ -62,11 +62,15 @@ const Shop = ({brandChange, currentUser}: IProps) => {
 })
 
 const handleHomeItem = async(chosenItem: string) => {
-  const brandsList: string[] = ["Jordan", "Nike", "Adidas", "Essentials", "Test"]
+  const brandsList: string[] = ["Jordan", "Nike", "Adidas", "Essentials"]
     for (let i = 0; i < brandsList.length; i++) {
-      const stock: any = await getDoc(doc(db, 'inventory', brandsList[i]))
-      var stockName: string[] = Object.keys(stock.data())
-      var stockImg: IShopImages[] = Object.values(stock.data())
+      const stock: DocumentSnapshot<DocumentData> | undefined = await getDoc(doc(db, 'inventory', brandsList[i]))
+      if (!stock.data()) {
+        console.log("error retrieving stock")
+        return
+      }
+      var stockName: string[] = Object.keys(stock.data()!)
+      var stockImg: IShopImages[] = Object.values(stock.data()!)
       const idx = stockName.findIndex(name => name === chosenItem)
       if (idx > -1) {
         setShop([{name: chosenItem, img: stockImg[idx].img}])
@@ -136,10 +140,9 @@ const handleGetShop = async (chosenBrand: string) => {
     if (sizeArrayIdx > -1) {
       const sizeArray: string[] = Object.keys(tempObject[sizeArrayIdx][1])
       const sizeData: [string, {Price: number, Quantity: number}][] = Object.entries(tempObject[sizeArrayIdx][1])
-    
       setSizesDetail([...sizeData])
       handleOrderSizes([...sizeArray])
-      setCurrentShoe(({...currentShoe, name: chosenShoe, img: tempShop[idx].img, size: "", price: 0, maxQuantity: 0}))
+      setCurrentShoe(() => ({...currentShoe, name: chosenShoe, img: tempShop[idx].img, size: "", price: 0, maxQuantity: 0}))
       setSingleFocus(true)
     } else {
       console.log("item does not have sizes")
@@ -150,42 +153,42 @@ const handleGetShop = async (chosenBrand: string) => {
   const handleSizeDetails = (chosenSize: string) => {
     const idx: number = sizesDetail.findIndex((size: any) => size[0] === chosenSize)
     const sizeValues: any = Object.values(sizesDetail[idx])
-    setCurrentShoe(({...currentShoe, price: sizeValues[1].Price, maxQuantity: sizeValues[1].Quantity, size: sizeValues[0]}))
+    console.log(currentShoe)
+    setCurrentShoe(() => ({...currentShoe, price: sizeValues[1].Price, maxQuantity: sizeValues[1].Quantity, size: sizeValues[0]}))
   }
 
   const handleAddToCart = async () => {
     const usersRef = doc(db, 'users', currentUser)
+    var tempShoe = currentShoe
     const usersDoc: DocumentSnapshot<DocumentData> | undefined = await getDoc(usersRef)
     if (!usersDoc.data() || !usersDoc.data()!.cart) {
       console.log('error grabbing cart')
       return
     }
     var tempCart: ICart['cart'] = usersDoc.data()!.cart
-    let idx = tempCart.findIndex((item: ICurrentShoe) => item.name === currentShoe.name && item.size === currentShoe.size)
+    let idx = tempCart.findIndex((item: ICurrentShoe) => item.name === tempShoe.name && item.size === tempShoe.size)
 
     if (idx > -1) {
-      if (currentShoe.quantity === currentShoe.maxQuantity) {
+      if (tempShoe.quantity === tempShoe.maxQuantity) {
           console.log("No more stock")
           return
         } else {
-          currentShoe.quantity += 1;
-          let shoeToAdd = currentShoe
-          delete shoeToAdd.img
-           tempCart[idx] = shoeToAdd
+          tempShoe.quantity += 1
+          setCurrentShoe(() => tempShoe)
+          tempCart[idx] = tempShoe
           await updateDoc(usersRef, {
             cart: [...tempCart]
           })
-          console.log("item added to cart for non-initial time")
+          console.log("Add to cart for non-first time")
       }
     } else {
-      currentShoe.quantity = 1
-      let shoeToAdd = currentShoe
-      delete shoeToAdd.img
-      var newItemCart: ICart['cart'] = [...tempCart, shoeToAdd]
+      tempShoe.quantity = 1
+      setCurrentShoe(() => tempShoe)
+      var newItemCart: ICart['cart'] = [...tempCart, tempShoe]
       await updateDoc(usersRef, {
         cart: [...newItemCart]
       })
-      console.log("trigged when item added for first time")
+      console.log("Added to cart for first time")
     }
   }
 
@@ -253,12 +256,10 @@ setSingleFocus(false)
         {singleFocus ? 
         <>
           <div id="single-focus-container">
-
             <div className="item-container">
                 <img src={currentShoe.img} alt="Shoe" />
                 <p>{currentShoe.name}</p>
             </div>
-
             <div id="details-container">
               <div>
                 <h3>Price: ${currentShoe.price}</h3>
@@ -269,16 +270,16 @@ setSingleFocus(false)
                     <li key={size} onClick={() => handleSizeDetails(size)} style={size === currentShoe.size ? {backgroundColor: "#010A10", color: "#FFFBF2"} : {}}>{size}</li>
                   ))}
               </ul>
-              <button className="add-to-cart" onClick={handleAddToCart} disabled={currentShoe.size ? false : true}>ADD TO CART</button>
+              <button className="add-to-cart" onClick={handleAddToCart} disabled={!currentShoe.size ? true : false}>ADD TO CART</button>
             </div>
           </div>
           <button id="back-to-shop" className="back-button" onClick={() => setSingleFocus(false)}>&#9664; Back</button>
-          </> 
+        </> 
           :
           shop.map((item) => (
-            <div key={item.name} className="item-container">
-              <img src={item.img || ""} alt={`${item.name} Product Pic`} />
-              <p onClick={() => handleShoeSelection(item.name)}>{item.name}</p>
+            <div key={item.name} className="item-container" onClick={() => handleShoeSelection(item.name)}>
+              <img src={item.img || ""} alt={`${item.name} Product Pic`} loading="lazy"/>
+              <p>{item.name}</p>
             </div>
           )) 
           }

@@ -242,7 +242,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     }
   }, [currentUser])
 
-
+//TODO: DISABLE PURCHASE BUTTON WHILE PURCHASE FUNCTION IS AWAITING GENERATETIME()
 
   return (
     <section className='cart'>
@@ -327,7 +327,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
       </div>
       : <>
           <div className='instruction-details'>
-            <h1>E-TRANSFER: keagankeung@hotmail.com</h1>
+            <h1>E-TRANSFER: k_keung@live.com</h1>
             <h1>ORDER ID: {displayedID}</h1>
             <h1>ORDER PRICE: ${totalPrice}</h1>
             <p onClick={() => handleModal("show")}>Instructions</p>
@@ -342,7 +342,3 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
 }
 
 export default Cart
-
-function dateTime(dateTime: any) {
-  throw new Error('Function not implemented.')
-}

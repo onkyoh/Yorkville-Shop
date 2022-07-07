@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { signOut } from "firebase/auth";
-import { auth } from '../firebase-config'
-import { ReactComponent as Instagram } from '../icons/instagram.svg'
+import { auth } from '../firebase-config';
+import { ReactComponent as Instagram } from '../icons/instagram.svg';
 
 interface IProps {
   setBrandChange:  React.Dispatch<React.SetStateAction<string>>
@@ -71,7 +71,6 @@ const Navbar = ({setBrandChange, currentUser, setCurrentUser}: IProps) => {
               <Link to="/Shop" onClick={() => {handleShowNav(); handleBrand("Nike")}}>Nike</Link>
               <Link to="/Shop" onClick={() => {handleShowNav(); handleBrand("Adidas")}}>Adidas</Link>
               <Link to="/Shop" onClick={() => {handleShowNav(); handleBrand("Essentials")}}>Essentials</Link>
-              <Link to="/Shop" onClick={() => {handleShowNav(); handleBrand("Test")}}>Test</Link>
             </div>
           </li>
           <li onClick={handleShowNav}><Link to="/Policies">POLICIES</Link></li>
