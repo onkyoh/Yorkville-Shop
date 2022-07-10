@@ -36,7 +36,7 @@ const Navbar = ({setBrandChange, currentUser, setCurrentUser}: IProps) => {
     var nav: HTMLElement | null =  document.querySelector("#nav-links")
     var burger: HTMLElement | null =  document.querySelector("#burger")
     var navBar: HTMLElement | null = document.querySelector(".navbar")
-    if (nav && burger && navBar !== null) {
+    if (nav && burger && navBar) {
       if ( nav.className === "") {
         nav.className = "hide"
         burger.className = ""
@@ -45,12 +45,22 @@ const Navbar = ({setBrandChange, currentUser, setCurrentUser}: IProps) => {
         nav.className = ""
         burger.className = "make-x"
         navBar.className = "navbar"
-  
       }
     }
-    console.log(nav?.className)
   }
 
+  const handleCloseNav = () => {
+    var nav: HTMLElement | null =  document.querySelector("#nav-links")
+    var burger: HTMLElement | null =  document.querySelector("#burger")
+    var navBar: HTMLElement | null = document.querySelector(".navbar")
+    if (nav && burger && navBar) {
+      if ( nav.className === "") {
+        nav.className = "hide"
+        burger.className = ""
+        navBar.className = "navbar not-faded"
+      }
+  }
+}
 
   const logout = async () => {
     await signOut(auth);
@@ -63,23 +73,23 @@ const Navbar = ({setBrandChange, currentUser, setCurrentUser}: IProps) => {
       <div id="logo"><Link to="/">YorkvilleShop</Link></div>
       <ul id="nav-links" className='hide'>
           <a href="https://instagram.com/yorkville.shop?igshid=YmMyMTA2M2Y=" id="instagram-container"><Instagram id="instagram"/></a>
-          <li onClick={handleShowNav}><Link to="/">HOME</Link></li>
+          <li onClick={handleCloseNav}><Link to="/">HOME</Link></li>
           <li id="shop-anchor" onClick={handleShowBrands}><span id="triangle-span" className='open-span'>SHOP</span>
             <div id="shop-dropdown" className="hide">
-              <Link to="/Shop" onClick={() => {handleShowNav(); handleBrand("All")}}>All</Link>
-              <Link to="/Shop" onClick={() => {handleShowNav(); handleBrand("Jordan")}}>Jordan</Link>
-              <Link to="/Shop" onClick={() => {handleShowNav(); handleBrand("Nike")}}>Nike</Link>
-              <Link to="/Shop" onClick={() => {handleShowNav(); handleBrand("Adidas")}}>Adidas</Link>
-              <Link to="/Shop" onClick={() => {handleShowNav(); handleBrand("Essentials")}}>Essentials</Link>
+              <Link to="/Shop" onClick={() => {handleCloseNav(); handleBrand("All")}}>All</Link>
+              <Link to="/Shop" onClick={() => {handleCloseNav(); handleBrand("Jordan")}}>Jordan</Link>
+              <Link to="/Shop" onClick={() => {handleCloseNav(); handleBrand("Nike")}}>Nike</Link>
+              <Link to="/Shop" onClick={() => {handleCloseNav(); handleBrand("Adidas")}}>Adidas</Link>
+              <Link to="/Shop" onClick={() => {handleCloseNav(); handleBrand("Essentials")}}>Essentials</Link>
             </div>
           </li>
-          <li onClick={handleShowNav}><Link to="/Policies">POLICIES</Link></li>
-          <li onClick={handleShowNav}><Link to="/Orders">ORDERS</Link></li>
-          <li onClick={handleShowNav}><Link to="/Cart">CART</Link></li>
+          <li onClick={handleCloseNav}><Link to="/Policies">POLICIES</Link></li>
+          <li onClick={handleCloseNav}><Link to="/Orders">ORDERS</Link></li>
+          <li onClick={handleCloseNav}><Link to="/Cart">CART</Link></li>
           {currentUser ? 
-           <li onClick={handleShowNav}><Link to="/" onClick={logout}>LOGOUT</Link></li>
+           <li onClick={handleCloseNav}><Link to="/" onClick={logout}>LOGOUT</Link></li>
           :
-          <li onClick={handleShowNav}><Link to="/Login">LOGIN</Link></li>
+          <li onClick={handleCloseNav}><Link to="/Login">LOGIN</Link></li>
           } 
       </ul>
       <div id='burger' onClick={handleShowNav}>

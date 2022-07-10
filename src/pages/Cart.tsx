@@ -7,15 +7,17 @@ import { DocumentSnapshot, DocumentData } from 'firebase/firestore'
 
 
 interface IProps {
-  cart: {
-    name: string
-    size: string
-    quantity: number
-    price: number
-    maxQuantity: number
-  }[];
+  cart: IItem[]
   setCart: React.Dispatch<React.SetStateAction<IProps['cart']>>;
   currentUser: string
+}
+
+interface IItem {
+  name: string
+  size: string
+  quantity: number
+  price: number
+  maxQuantity: number
 }
 
 interface IOrder {
@@ -24,6 +26,7 @@ interface IOrder {
     id: string
     paid: boolean
     timePlaced: string
+    address: IAddress
     items: {
       name: string
       size: string
@@ -46,12 +49,8 @@ interface IAddress {
 
 
 const Cart = ({cart, setCart, currentUser}: IProps) => {
-
-  const [totalPrice, setTotalPrice] = useState(0)
-  const [checkout, setCheckout] = useState(false)
-  const [ship, setShip] = useState(false)
-  const [error, setError] = useState("")
-  const [shipmentAddress, setShipmentAddress] = useState<IAddress>({
+  
+  const emptyAddress = {
     firstName: "",
     lastName: "",
     address1: "",
@@ -59,11 +58,17 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     city: "",
     postalCode: "",
     province: "",
-  })
+  }
+  const [totalPrice, setTotalPrice] = useState(0)
+  const [checkout, setCheckout] = useState(false)
+  const [ship, setShip] = useState(false)
+  const [error, setError] = useState("")
+  const [shipmentAddress, setShipmentAddress] = useState<IAddress>(emptyAddress)
   const [cartError, setCartError] = useState("")
   const [isDisabled, setIsDisabled] = useState(true)
   const [paid, setPaid] = useState(false)
   const [displayedID, setDisplayedID] = useState("")
+  
 
   const handleGetCart = async () => {
     try {
@@ -104,9 +109,17 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
 
   const generateTime = async () => {
     try {
-      const timeFetch = await fetch("https://salty-citadel-43385.herokuapp.com/https://timeapi.io/api/Time/current/zone?timeZone=EST")
-      const timeResponse = await timeFetch.json()
+      const loader: HTMLElement | null = document.querySelector("#loader")
+      if (loader) {
+        loader.className = "show"
+        const timeFetch = await fetch("https://salty-citadel-43385.herokuapp.com/https://timeapi.io/api/Time/current/zone?timeZone=EST")
+        const timeResponse = await timeFetch.json()
+        const unLoad = async () => {
+        loader.className = ""
+      }
+      await unLoad()
       return timeResponse.dateTime
+    }
     } catch (e: any) {
       console.log(e.message)
     }
@@ -119,7 +132,6 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     
     }
     setTotalPrice(calculatedPrice)
-    console.log("Price set")
   }
 
 
@@ -133,7 +145,6 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
       calculatedPrice = calculatedPrice + 15
     }
     setTotalPrice(calculatedPrice)
-    console.log("Price changed")
   }
 
 
@@ -175,7 +186,6 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
 
   const handlePurchase = async (e: any) => {
     e.preventDefault()
-    console.log("purchase called")
     let isValid = true
     if (ship) {
       isValid = validateAddress(shipmentAddress)
@@ -191,8 +201,8 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
       var oldOrders = (userDoc.data()!.orders)
       const orderId: string = generateId();
       const timePlaced: string = await generateTime();
-      const newOrder: IOrder['orders'] = { id: orderId, items: cart, totalPrice: totalPrice, paid: false, timePlaced: timePlaced }
-      console.log(newOrder)
+
+      const newOrder: IOrder['orders'] = { id: orderId, items: cart, address: shipmentAddress, totalPrice: totalPrice, paid: false, timePlaced: timePlaced }
       await updateDoc((doc(db, 'users', currentUser)), {
         orders: [...oldOrders, newOrder]
       })
@@ -220,11 +230,13 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     handleTotalPrice(cart, boolean)
     setIsDisabled(false)
     setError("")
+    setShipmentAddress(emptyAddress)
   }
 
- const handleAddress = (e: any) => {
-    const field = e.target.id
-    setShipmentAddress({...shipmentAddress, [field]: e.target.value})
+ const handleAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement
+    const field = target.id
+    setShipmentAddress({...shipmentAddress, [field]: target.value})
   }
 
   const handleModal = (display: string) => {
@@ -242,8 +254,6 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     }
   }, [currentUser])
 
-//TODO: DISABLE PURCHASE BUTTON WHILE PURCHASE FUNCTION IS AWAITING GENERATETIME()
-
   return (
     <section className='cart'>
       {!checkout ? 
@@ -255,7 +265,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
           {cart.length === 0 ? null : <button onClick={() => setCheckout(true)}>GO TO CHECKOUT</button>}
           <span>{cartError}</span>
           <ul>
-            {cart.map((item: any) => (
+            {cart.map((item: IItem) => (
               <li key={`${item.name}+${item.size}`} >
                 <p>Shoe: {item.name}, Size: {item.size}, Price: ${item.price}, Quantity: {item.quantity}</p>
                 <button onClick={() => handleDeleteItem(item.name, item.size)}> X </button>
@@ -272,7 +282,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
         <button id="back-to-cart" className="back-button" onClick={handleGoToCheckout}>&#9664; Back</button>
         <form>
           <h2>Enter Shipping Address</h2>
-          <span>{error}</span>
+          <span className='error' style={!error ? {display: "none"} : {}}>{error}</span>
           <section>
             <div className='method'>
               <input type="radio" name="Delivery" value="pickup" id="pickup" className="radio" onChange={() => handleShip(false)}/>
@@ -337,6 +347,9 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
       }
        </>
       }
+      <div id="loader" className=''>
+        <div id="loader-icon"></div>
+      </div>
     </section>
   )
 }

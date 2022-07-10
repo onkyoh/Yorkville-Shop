@@ -60,6 +60,7 @@ const Shop = ({brandChange, currentUser}: IProps) => {
     quantity: 0,
     maxQuantity: 0,
 })
+  const [error, setError] = useState("")
 
 const handleHomeItem = async(chosenItem: string) => {
   const brandsList: string[] = ["Jordan", "Nike", "Adidas", "Essentials"]
@@ -142,37 +143,62 @@ const handleGetShop = async (chosenBrand: string) => {
       const sizeData: [string, {Price: number, Quantity: number}][] = Object.entries(tempObject[sizeArrayIdx][1])
       setSizesDetail([...sizeData])
       handleOrderSizes([...sizeArray])
-      setCurrentShoe(() => ({...currentShoe, name: chosenShoe, img: tempShop[idx].img, size: "", price: 0, maxQuantity: 0}))
+      setCurrentShoe(() => ({...currentShoe, name: chosenShoe, img: tempShop[idx].img, size: "", price: 0, maxQuantity: 0, quantity: 0}))
       setSingleFocus(true)
+      setError("")
     } else {
       console.log("item does not have sizes")
     }
 
   }
 
-  const handleSizeDetails = (chosenSize: string) => {
+  const handleSizeDetails = async (chosenSize: string) => {
     const idx: number = sizesDetail.findIndex((size: any) => size[0] === chosenSize)
     const sizeValues: any = Object.values(sizesDetail[idx])
-    console.log(currentShoe)
-    setCurrentShoe(() => ({...currentShoe, price: sizeValues[1].Price, maxQuantity: sizeValues[1].Quantity, size: sizeValues[0]}))
+    const tempShoe = {
+      price: sizeValues[1].Price, maxQuantity: sizeValues[1].Quantity, size: sizeValues[0]
+    }
+    let tempCart: Awaited<ICart['cart']> | undefined  = await handleGetCart()
+    if (tempCart) {
+      const cartIdx = tempCart.findIndex((item: ICurrentShoe) => item.name === currentShoe.name && item.size === sizeValues[0])
+      console.log("hi", tempCart[cartIdx])
+      if (cartIdx > -1) {
+        setCurrentShoe(() => ({...currentShoe, ...tempShoe, quantity: tempCart![cartIdx].quantity}))
+        console.log("added")
+      } else {
+        setCurrentShoe(() => ({...currentShoe, ...tempShoe, quantity: 0}))
+      }
+      setError("")
+    }
+
+  }
+
+  const handleGetCart = async () => {
+    const usersDoc: DocumentSnapshot<DocumentData> | undefined = await getDoc(doc(db, 'users', currentUser))
+      if (usersDoc.data() && usersDoc.data()!.cart) {
+        let tempCart: ICart['cart'] = [...usersDoc.data()!.cart]
+        return ([...tempCart])
+      } else {
+        console.log("error grabbing cart")
+      }
   }
 
   const handleAddToCart = async () => {
-    const usersRef = doc(db, 'users', currentUser)
     var tempShoe = currentShoe
-    const usersDoc: DocumentSnapshot<DocumentData> | undefined = await getDoc(usersRef)
-    if (!usersDoc.data() || !usersDoc.data()!.cart) {
-      console.log('error grabbing cart')
-      return
-    }
-    var tempCart: ICart['cart'] = usersDoc.data()!.cart
+    const usersRef = doc(db, 'users', currentUser)
+    var tempCart: Awaited<ICart['cart']> | undefined = await handleGetCart()
+    
+    if (tempCart) {
+
     let idx = tempCart.findIndex((item: ICurrentShoe) => item.name === tempShoe.name && item.size === tempShoe.size)
 
     if (idx > -1) {
+      tempShoe = tempCart[idx]
       if (tempShoe.quantity === tempShoe.maxQuantity) {
           console.log("No more stock")
+          setError("No more stock")
           return
-        } else {
+      } else {
           tempShoe.quantity += 1
           setCurrentShoe(() => tempShoe)
           tempCart[idx] = tempShoe
@@ -190,6 +216,7 @@ const handleGetShop = async (chosenBrand: string) => {
       })
       console.log("Added to cart for first time")
     }
+  }
   }
 
 const handleOrderSizes = (arrayOfSizes: string[]) => {
@@ -246,7 +273,7 @@ useEffect(() => {
       } else {
         handleGetShop("All")
       }
-
+      handleGetCart()
 }
 setSingleFocus(false)
 }, [brandChange])
@@ -264,13 +291,16 @@ setSingleFocus(false)
               <div>
                 <h3>Price: ${currentShoe.price}</h3>
                 <h4>Stock: {currentShoe.maxQuantity}</h4>
+                <h4>In Cart: {currentShoe.quantity}</h4>
               </div>
+              <span className='error' style={!error ? {display: "none"} : {}}>{error}</span>
               <ul>
                   {sizes.map((size) => (
                     <li key={size} onClick={() => handleSizeDetails(size)} style={size === currentShoe.size ? {backgroundColor: "#010A10", color: "#FFFBF2"} : {}}>{size}</li>
                   ))}
               </ul>
               <button className="add-to-cart" onClick={handleAddToCart} disabled={!currentShoe.size ? true : false}>ADD TO CART</button>
+              {/* TODO: IF SUCCESFUL ANIMATION */}
             </div>
           </div>
           <button id="back-to-shop" className="back-button" onClick={() => setSingleFocus(false)}>&#9664; Back</button>

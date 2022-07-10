@@ -71,7 +71,7 @@ const Login = ({setCurrentUser}: IProps) => {
         {needAccount ?
         <form className="register-form">
             <h2>Register</h2>
-            <span>{error}</span>
+            <span className="error" style={!error ? {display: "none"} : {}}>{error}</span>
             <label htmlFor="email-register">Email</label>
             <input type="email" id="email-register" value={registerEmail} onChange={(e) => setRegisterEmail(e.target.value)}/>
             <label htmlFor="password-register">Password</label>
@@ -82,7 +82,7 @@ const Login = ({setCurrentUser}: IProps) => {
         :
         <form className="login-form">
             <h2>Login</h2>
-            <span>{error}</span>
+            <span className="error" style={!error ? {display: "none"} : {}}>{error}</span>
             <label htmlFor="email-login">Email</label>
             <input type="email" id="email-login" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)}/>
             <label htmlFor="password-login">Password</label>
