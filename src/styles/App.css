@@ -1193,16 +1193,16 @@ body {
   font-size: 2em;
 }
 
-.policies p {
+.policies div {
   padding: 0.5em 1em;
   font-size: 1.5em;
 }
 
-.policies p ol {
+.policies div ol {
   list-style-position: inside;
 }
 
-.policies p ol li {
+.policies div ol li {
   margin-bottom: 1em;
   color: #373838;
 }

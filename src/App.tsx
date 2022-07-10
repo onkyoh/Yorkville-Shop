@@ -14,7 +14,6 @@ const App = () => {
     onAuthStateChanged (auth, (retrievedUser) => {
       if (retrievedUser) {
         setCurrentUser(retrievedUser.uid)
-        console.log("current User is", retrievedUser.uid)
       } else {
        console.log("No previous user found") 
       }

@@ -88,7 +88,7 @@ const Orders = ({currentUser}: IProps) => {
               <ol>
                 <span onClick={(e) => handleShowList(e)}> Items: &#9660;</span>
                 {order.items.map((item: IItems) => (
-                  <li>Name: {item.name}, Price: ${item.price}, Quantity: {item.quantity}</li>
+                  <li key={`${item.name + item.size}`}>Name: {item.name}, Price: ${item.price}, Quantity: {item.quantity}</li>
                 ))}
               </ol> 
             </li>
@@ -105,7 +105,7 @@ const Orders = ({currentUser}: IProps) => {
             <ol>
               <span onClick={(e) => handleShowList(e)}> Items: &#9660;</span>
               {order.items.map((item: IItems) => (
-                <li>Name: {item.name}, Price: {item.price}, Quantity: {item.quantity}</li>
+                <li key={`${item.name + item.size}`}>Name: {item.name}, Price: {item.price}, Quantity: {item.quantity}</li>
                ))}
             </ol> 
           </li>

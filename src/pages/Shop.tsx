@@ -143,7 +143,7 @@ const handleGetShop = async (chosenBrand: string) => {
       const sizeData: [string, {Price: number, Quantity: number}][] = Object.entries(tempObject[sizeArrayIdx][1])
       setSizesDetail([...sizeData])
       handleOrderSizes([...sizeArray])
-      setCurrentShoe(() => ({...currentShoe, name: chosenShoe, img: tempShop[idx].img, size: "", price: 0, maxQuantity: 0, quantity: 0}))
+      setCurrentShoe(() => ({...currentShoe, name: chosenShoe, img: `${tempShop[idx].img || ""}`, size: "", price: 0, maxQuantity: 0, quantity: 0}))
       setSingleFocus(true)
       setError("")
     } else {
@@ -161,10 +161,8 @@ const handleGetShop = async (chosenBrand: string) => {
     let tempCart: Awaited<ICart['cart']> | undefined  = await handleGetCart()
     if (tempCart) {
       const cartIdx = tempCart.findIndex((item: ICurrentShoe) => item.name === currentShoe.name && item.size === sizeValues[0])
-      console.log("hi", tempCart[cartIdx])
       if (cartIdx > -1) {
         setCurrentShoe(() => ({...currentShoe, ...tempShoe, quantity: tempCart![cartIdx].quantity}))
-        console.log("added")
       } else {
         setCurrentShoe(() => ({...currentShoe, ...tempShoe, quantity: 0}))
       }
@@ -200,21 +198,19 @@ const handleGetShop = async (chosenBrand: string) => {
           return
       } else {
           tempShoe.quantity += 1
-          setCurrentShoe(() => tempShoe)
+          setCurrentShoe(() => ({...tempShoe}))
           tempCart[idx] = tempShoe
           await updateDoc(usersRef, {
             cart: [...tempCart]
           })
-          console.log("Add to cart for non-first time")
       }
     } else {
       tempShoe.quantity = 1
-      setCurrentShoe(() => tempShoe)
+      setCurrentShoe(() => ({...tempShoe}))
       var newItemCart: ICart['cart'] = [...tempCart, tempShoe]
       await updateDoc(usersRef, {
         cart: [...newItemCart]
       })
-      console.log("Added to cart for first time")
     }
   }
   }
@@ -263,7 +259,6 @@ const handleOrderSizes = (arrayOfSizes: string[]) => {
 useEffect(() => {
   const chosenItem = window.localStorage.getItem('item') 
   const chosenBrand = window.localStorage.getItem('brand')
-  console.log(chosenBrand)
   if (chosenItem) {
     handleHomeItem(chosenItem)
     window.localStorage.setItem('item', "")
@@ -300,7 +295,6 @@ setSingleFocus(false)
                   ))}
               </ul>
               <button className="add-to-cart" onClick={handleAddToCart} disabled={!currentShoe.size ? true : false}>ADD TO CART</button>
-              {/* TODO: IF SUCCESFUL ANIMATION */}
             </div>
           </div>
           <button id="back-to-shop" className="back-button" onClick={() => setSingleFocus(false)}>&#9664; Back</button>
@@ -308,13 +302,11 @@ setSingleFocus(false)
           :
           shop.map((item) => (
             <div key={item.name} className="item-container" onClick={() => handleShoeSelection(item.name)}>
-              <img src={item.img || ""} alt={`${item.name} Product Pic`} loading="lazy"/>
+              <img src={item.img} alt={item.name}/>
               <p>{item.name}</p>
             </div>
           )) 
           }
-
-
     </div>
   )
 }
