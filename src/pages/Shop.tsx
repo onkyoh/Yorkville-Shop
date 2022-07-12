@@ -153,6 +153,10 @@ const handleGetShop = async (chosenBrand: string) => {
   }
 
   const handleSizeDetails = async (chosenSize: string) => {
+    if (!currentUser) {
+      setError("Please login to begin shopping.")
+      return
+    } 
     const idx: number = sizesDetail.findIndex((size: any) => size[0] === chosenSize)
     const sizeValues: any = Object.values(sizesDetail[idx])
     const tempShoe = {
