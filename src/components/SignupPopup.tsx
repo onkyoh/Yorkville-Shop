@@ -1,4 +1,6 @@
 
+import { useNavigate } from "react-router-dom";
+
 
 const SignupPopup = () => {
 
@@ -11,8 +13,10 @@ const SignupPopup = () => {
         }
       }
 
+    const navigate = useNavigate()
+
     const handlePopupClicked = () => {
-        window.location.pathname = "/Login"
+       navigate('/Login')
     }
 
   return (
