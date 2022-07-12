@@ -181,6 +181,7 @@ const handleGetShop = async (chosenBrand: string) => {
       }
   }
 
+
   const handleAddToCart = async () => {
     var tempShoe = currentShoe
     const usersRef = doc(db, 'users', currentUser)
@@ -256,6 +257,7 @@ const handleOrderSizes = (arrayOfSizes: string[]) => {
         setSizes([...newJuniorArray, ...newWomenArray, ...newMenArray])
 }
 
+
 useEffect(() => {
   const chosenItem = window.localStorage.getItem('item') 
   const chosenBrand = window.localStorage.getItem('brand')
@@ -268,10 +270,34 @@ useEffect(() => {
       } else {
         handleGetShop("All")
       }
-      handleGetCart()
+  if (currentUser) {
+    handleGetCart()
+  }
 }
 setSingleFocus(false)
-}, [brandChange])
+}, [brandChange, currentUser])
+
+
+ const handleOnLoad = () => {
+  const options = {
+    threshold: 0.1
+  }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+     if (entry.isIntersecting) {
+      entry.target.className = 'fade-in'
+     }})
+  }, options)
+  
+  const imgs = document.querySelectorAll("#shop-imgs")
+  imgs.forEach(img => observer.observe(img))
+ }
+
+
+
+
+
+
 
   return (
     <div className='shop'>
@@ -302,7 +328,7 @@ setSingleFocus(false)
           :
           shop.map((item) => (
             <div key={item.name} className="item-container" onClick={() => handleShoeSelection(item.name)}>
-              <img src={item.img} alt={item.name}/>
+              <img src={item.img} id="shop-imgs" alt={item.name} onLoad={handleOnLoad}/>
               <p>{item.name}</p>
             </div>
           )) 

@@ -12,6 +12,24 @@ body {
   background: url("../pictures/yorkvilleBG_Dark.png");
 }
 
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .navbar {
   position: fixed;
   height: 75px;
@@ -39,7 +57,7 @@ body {
   color: #FFFBF2;
   font-size: 1.6em;
   text-decoration: none;
-  text-shadow: 1px 1px 1px black;
+  text-shadow: 1px 1px 4px black;
   font-weight: bold;
 }
 
@@ -94,7 +112,7 @@ body {
   color: #FFFBF2;
   font-weight: bold;
   font-size: 1.1em;
-  text-shadow: 1px 1px 1px black;
+  text-shadow: 2px 2px 2px black;
   padding: 0 1.5em;
   -webkit-transition: background-color 0.5s;
   transition: background-color 0.5s;
@@ -108,7 +126,7 @@ body {
   text-decoration: none;
   color: #FFFBF2;
   font-weight: bold;
-  text-shadow: 1px 1px 1px black;
+  text-shadow: 2px 2px 2px black;
   height: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -153,19 +171,20 @@ body {
   width: 200px;
   -webkit-box-shadow: 2px 2px 8px #010A10, -2px 2px 8px #010A10;
           box-shadow: 2px 2px 8px #010A10, -2px 2px 8px #010A10;
-  background-color: rgba(200, 200, 200, 0.3);
+  background-color: rgba(50, 50, 50, 0.6);
 }
 
 .navbar ul #shop-anchor #shop-dropdown a {
-  font-size: 1.2em;
+  font-size: 1.4em;
   color: #FFFBF2;
   padding: 0.5em 1em;
+  text-shadow: 1px 1px 2px black;
   -webkit-transition: background-color 0.5s;
   transition: background-color 0.5s;
 }
 
 .navbar ul #shop-anchor #shop-dropdown a:hover {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .navbar ul #shop-anchor:hover {
@@ -180,10 +199,6 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-}
-
-.page {
-  padding-top: 75px;
 }
 
 .home {
@@ -468,6 +483,13 @@ body {
   aspect-ratio: 1/1;
   margin: 1.5em 1.5em 0 1.5em;
   background-color: #d6d5d5;
+  opacity: 0;
+  -webkit-transition: opacity 0.5s;
+  transition: opacity 0.5s;
+}
+
+.shop .item-container .fade-in {
+  opacity: 1;
 }
 
 .shop .back-button {
