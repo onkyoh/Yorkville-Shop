@@ -12,11 +12,13 @@ interface IProps {
 }
 
 interface IStock {
-  Shoes: {
-    img: string
-    Price: number
-    Name: string
-  }[]
+  Shoes: IShoe[]
+}
+
+interface IShoe {
+  img: string
+  Price: number
+  Name: string
 }
 
 
@@ -123,7 +125,7 @@ const Home = ({currentUser}: IProps) => {
           </div>
           <section className='carousel'>
             <ul>
-              {newStock.map((item: any) => (
+              {newStock.map((item: IShoe) => (
                 <li style={{transform: `translate(calc(${newCarousel} * (-100% - 25px)))`}} onClick={() => handleShoeSelection(item.Name)}>
                   <img src={item.img} alt="shoe pic"/>
                   <div><p>{item.Name}</p><p>${item.Price}</p></div>
