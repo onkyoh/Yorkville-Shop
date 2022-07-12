@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import SignupPop from '../components/SignupPopup'
 import next from '../icons/morethan.png'
 import { db } from '../firebase-config'
@@ -103,10 +104,12 @@ const Home = ({currentUser}: IProps) => {
   
   }
 
+  const navigate = useNavigate()
+
   const handleShoeSelection = (name: string) => {
     window.localStorage.setItem('brand', "All")
     window.localStorage.setItem('item', name)
-    window.location.pathname = "/Shop"
+    navigate('/Shop')
   }
 
   return (
