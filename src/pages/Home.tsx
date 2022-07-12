@@ -52,10 +52,10 @@ const Home = ({currentUser}: IProps) => {
     const fetchNew: DocumentSnapshot<DocumentData> | undefined = await getDoc(doc(db, "homeDisplay", brandArray[i]))
     let stockArray: IStock['Shoes'] = []
     if (!fetchNew) {
-      console.log("error")
+      console.log("error fetching stock")
     } else {
       if (!fetchNew.data()?.Stock) {
-        console.log("error")
+        console.log("error fetching stock")
       } else {
         stockArray = [...fetchNew.data()!.Stock]
       }
