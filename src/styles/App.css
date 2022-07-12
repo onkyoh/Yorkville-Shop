@@ -12,24 +12,6 @@ body {
   background: url("../pictures/yorkvilleBG_Dark.png");
 }
 
-@-webkit-keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .navbar {
   position: fixed;
   height: 75px;
@@ -483,13 +465,16 @@ body {
   aspect-ratio: 1/1;
   margin: 1.5em 1.5em 0 1.5em;
   background-color: #d6d5d5;
+}
+
+.shop .item-container #shop-imgs {
   opacity: 0;
   -webkit-transition: opacity 0.5s;
   transition: opacity 0.5s;
 }
 
 .shop .item-container .fade-in {
-  opacity: 1;
+  opacity: 1 !important;
 }
 
 .shop .back-button {

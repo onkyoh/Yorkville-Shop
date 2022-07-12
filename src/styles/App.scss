@@ -26,13 +26,6 @@ body {
     background: url("../pictures/yorkvilleBG_Dark.png");
 }
 
- @keyframes fadeIn {
-    from {
-        opacity: 0;
-    } to {
-        opacity: 1;
-    }
- } 
 
 .navbar {
     position: fixed;
@@ -309,11 +302,13 @@ body {
             aspect-ratio: 1/1;
             margin: 1.5em 1.5em 0 1.5em;
             background-color: $base-gray;
+        }
+        #shop-imgs {
             opacity: 0;
             transition: opacity 0.5s;
         }
         .fade-in {
-            opacity: 1;
+            opacity: 1 !important;
         }
     }
     .back-button {
