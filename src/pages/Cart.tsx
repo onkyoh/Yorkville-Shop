@@ -7,8 +7,6 @@ import { DocumentSnapshot, DocumentData } from 'firebase/firestore'
 
 
 interface IProps {
-  cart: IItem[]
-  setCart: React.Dispatch<React.SetStateAction<IProps['cart']>>;
   currentUser: string
 }
 
@@ -27,13 +25,7 @@ interface IOrder {
     paid: boolean
     timePlaced: string
     address: IAddress
-    items: {
-      name: string
-      size: string
-      quantity: number
-      price: number
-      maxQuantity: number
-    }[];
+    items: IItem[]
   }
 }
 
@@ -48,7 +40,7 @@ interface IAddress {
 }
 
 
-const Cart = ({cart, setCart, currentUser}: IProps) => {
+const Cart = ({currentUser}: IProps) => {
   
   const emptyAddress = {
     firstName: "",
@@ -61,6 +53,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
   }
   const [totalPrice, setTotalPrice] = useState(0)
   const [checkout, setCheckout] = useState(false)
+  const [cart, setCart] = useState<IItem[]>()
   const [ship, setShip] = useState(false)
   const [error, setError] = useState("")
   const [shipmentAddress, setShipmentAddress] = useState<IAddress>(emptyAddress)
@@ -73,27 +66,31 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
   const handleGetCart = async () => {
     try {
       const userDoc: any = await getDoc(doc(db, 'users', currentUser))
-      setCart(userDoc.data().cart)
-      handleInitialTotalPrice([...userDoc.data().cart])
+      if (userDoc.data() && userDoc.data().cart) {
+        setCart(() => [...userDoc.data().cart])
+        handleInitialTotalPrice([...userDoc.data().cart])
+      }
     } catch (e: any) {
-      setCartError("Error with cart retrieval")
       console.log(e.message)
+      setCartError(() => "Error with cart retrieval")
     }
   }
 
   const handleDeleteItem = async (name: string, size: string) => {
-    var tempCart = cart
-    var idx = tempCart.findIndex(item => item.name === name && item.size === size)
-    if (tempCart[idx].quantity < 2) {
-      tempCart.splice(idx, 1)
-    } else {
-      tempCart[idx].quantity -= 1
-    }
-    setCart([...tempCart])
-    await updateDoc((doc(db, 'users', currentUser)), {
-      cart: [...tempCart]
-    })
-    handleInitialTotalPrice([...tempCart])
+      var tempCart: IItem[] = [...cart!]
+      var idx = tempCart.findIndex(item => item.name === name && item.size === size)
+      if (tempCart[idx].quantity < 2) {
+        tempCart.splice(idx, 1)
+      } else {
+        tempCart[idx].quantity -= 1
+      }
+      setCart([...tempCart])
+      await updateDoc((doc(db, 'users', currentUser)), {
+        cart: [...tempCart]
+      })
+      if (tempCart) {
+        handleInitialTotalPrice([...tempCart])  
+      }
   }
 
   const generateId = () => {
@@ -125,26 +122,27 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     }
   }
 
-  const handleInitialTotalPrice = (tempCart: any) => {
-    var calculatedPrice = 0;
-    for (let i = 0; i < cart.length; i++) {
-      calculatedPrice = calculatedPrice + (tempCart[i].price * tempCart[i].quantity)
-    
+  const handleInitialTotalPrice = (tempCart: IItem[]) => {
+    if (cart) {
+      let calculatedPrice = 0;
+      for (let i = 0; i < cart.length; i++) {
+        calculatedPrice = calculatedPrice + (tempCart[i].price * tempCart[i].quantity)
+      }
+      setTotalPrice(calculatedPrice)
     }
-    setTotalPrice(calculatedPrice)
+     
   }
 
 
-  const handleTotalPrice = (tempCart: any, boolean: boolean) => {
-    var calculatedPrice = 0;
-    for (let i = 0; i < cart.length; i++) {
-      calculatedPrice = calculatedPrice + (tempCart[i].price * tempCart[i].quantity)
-    
-    }
-    if (boolean) {
-      calculatedPrice = calculatedPrice + 15
-    }
-    setTotalPrice(calculatedPrice)
+  const handleTotalPrice = (tempCart: IItem[], boolean: boolean) => {
+      let calculatedPrice = 0;
+      for (let i = 0; i < cart!.length; i++) {
+        calculatedPrice = calculatedPrice + (tempCart[i].price * tempCart[i].quantity)
+      }
+      if (boolean) {
+        calculatedPrice = calculatedPrice + 15
+      }
+      setTotalPrice(calculatedPrice)
   }
 
 
@@ -198,11 +196,11 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
         console.log("error retrieving user data")
         return
       }
+
       var oldOrders = (userDoc.data()!.orders)
       const orderId: string = generateId();
       const timePlaced: string = await generateTime();
-
-      const newOrder: IOrder['orders'] = { id: orderId, items: cart, address: shipmentAddress, totalPrice: totalPrice, paid: false, timePlaced: timePlaced }
+      const newOrder: IOrder['orders'] = { id: orderId, items: [...cart!], address: shipmentAddress, totalPrice: totalPrice, paid: false, timePlaced: timePlaced }
       await updateDoc((doc(db, 'users', currentUser)), {
         orders: [...oldOrders, newOrder]
       })
@@ -213,21 +211,22 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     } catch (e: any) {
       setError(e.messsage)
     }
-    
   } 
   }
 
   const handleGoToCheckout = () => {
-    setCheckout(false)
-    setShip(false)
-    handleInitialTotalPrice([...cart])
-    setError("")
-    setIsDisabled(true)
+    if (cart) {
+      setCheckout(false)
+      setShip(false)
+      handleInitialTotalPrice([...cart])
+      setError("")
+      setIsDisabled(true)
+    }
   }
 
   const handleShip = (boolean: boolean) => {
     setShip(() => boolean)
-    handleTotalPrice(cart, boolean)
+    handleTotalPrice(cart!, boolean)
     setIsDisabled(false)
     setError("")
     setShipmentAddress(emptyAddress)
@@ -251,6 +250,7 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
   useEffect(() => {
     if (currentUser) {
       handleGetCart()
+      setCartError(() => "")
     }
   }, [currentUser])
 
@@ -258,11 +258,11 @@ const Cart = ({cart, setCart, currentUser}: IProps) => {
     <section className='cart'>
       {!checkout ? 
       <div id='cart-list'>
-        {cart.length === 0 || !currentUser ? 
+        {!cart || cart.length === 0 || !currentUser ? 
           <h1>No items in cart...</h1>  
             :
           <> 
-          {cart.length === 0 ? null : <button onClick={() => setCheckout(true)}>GO TO CHECKOUT</button>}
+          {!cart || cart.length === 0 ? null : <button onClick={() => setCheckout(true)}>GO TO CHECKOUT</button>}
           <span>{cartError}</span>
           <ul>
             {cart.map((item: IItem) => (

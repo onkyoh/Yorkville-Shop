@@ -749,31 +749,32 @@ body {
     }
 
 .policies {
-    position: absolute;
-    padding-top: 75px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: $base-white;
-    width: calc(min(500px, 90%));
-    box-shadow: 0px 0px 16px $base-black;
-    border-radius: 25px;
-    h2 {
-        font-weight: bold;
-        padding: 0.5em 1em;
-        font-size: 2em;
-    }
-    div {
-        padding: 0.5em 1em;
-        font-size: 1.5em;
-        ol {
-            list-style-position: inside;
-            li {
-                margin-bottom: 1em;
-                color: $light-black;
+    margin-top: 75px;
+    height: calc(100vh - 75px);
+    width: 100vw;
+    @include flexCenter();
+    section {
+        background-color: $base-white;
+        width: calc(min(500px, 90%));
+        box-shadow: 0px 0px 16px $base-black;
+        border-radius: 25px;
+        h2 {
+            font-weight: bold;
+            padding: 0.5em 1em;
+            font-size: 2em;
+        }
+        div {
+            padding: 0.5em 1em;
+            font-size: 1.5em;
+            ol {
+                list-style-position: inside;
+                li {
+                    margin-bottom: 1em;
+                    color: $light-black;
+                }
             }
         }
-    }
+}
 }
 
 .orders {
@@ -1009,6 +1010,9 @@ body {
             }
         }
         
+    }
+    .policies {
+        align-items: flex-start;
     }
     .hide {
         display: none !important;
