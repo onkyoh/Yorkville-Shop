@@ -753,7 +753,7 @@ body {
 .policies {
     margin-top: 75px;
     height: calc(100vh - 75px);
-    width: 100vw;
+    width: 100%;
     @include flexCenter();
     section {
         background-color: $base-white;
@@ -979,7 +979,7 @@ body {
                 #shop-dropdown {
                     position: relative;
                     display: grid;
-                    grid-template-rows: auto auto auto;
+                    grid-template-rows: auto auto auto auto;
                     grid-template-columns: 50% 50%;
                     top: 0;
                     width: 100vw;
@@ -995,11 +995,12 @@ body {
                             background-color: rgba(0, 0, 0, 0.7);  
                         }
                     }
+                   
                     
-                    :nth-child(1), :nth-child(3), :nth-child(5) {
+                    :nth-child(1), :nth-child(3), :nth-child(5), :nth-child(7) {
                         border-right: rgba(0, 0, 0, 0.4) 2px solid;
                     }
-                    :nth-child(5), :nth-child(6) {
+                    :nth-child(7) {
                         border-bottom: none;
                     }
                 }

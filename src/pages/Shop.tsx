@@ -88,7 +88,7 @@ const handleHomeItem = async(chosenItem: string) => {
 const handleGetShop = async (chosenBrand: string) => {
   let allStock: any[] = []
   if (chosenBrand === "All") {
-    const brandsList: string[] = ["Jordan", "Nike", "Adidas", "Essentials"]
+    const brandsList: string[] = ["Jordan", "Nike", "Adidas", "Essentials", "New Balance", "Puma"]
     for (let i = 0; i < brandsList.length; i++) {
       const stock: DocumentSnapshot<DocumentData> | undefined = await getDoc(doc(db, 'inventory', brandsList[i]))
       if (stock.data()) {

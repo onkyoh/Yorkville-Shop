@@ -2,7 +2,6 @@ import { Link } from "react-router-dom"
 import { signOut } from "firebase/auth";
 import { auth } from '../firebase-config';
 import { ReactComponent as Instagram } from '../icons/instagram.svg';
-import { useState } from 'react'
 
 interface IProps {
   setBrandChange:  React.Dispatch<React.SetStateAction<string>>
@@ -65,8 +64,6 @@ const Navbar = ({setBrandChange, currentUser, setCurrentUser, classes, setClasse
 }
 
 
-
-
   const logout = async () => {
     await signOut(auth);
     setCurrentUser('');
@@ -86,6 +83,8 @@ const Navbar = ({setBrandChange, currentUser, setCurrentUser, classes, setClasse
               <Link to="/Shop" onClick={() => {handleCloseNav(); handleBrand("Nike")}}>Nike</Link>
               <Link to="/Shop" onClick={() => {handleCloseNav(); handleBrand("Adidas")}}>Adidas</Link>
               <Link to="/Shop" onClick={() => {handleCloseNav(); handleBrand("Essentials")}}>Essentials</Link>
+              <Link to="/Shop" onClick={() => {handleCloseNav(); handleBrand("New Balance")}}>New Balance</Link>
+              <Link to="/Shop" onClick={() => {handleCloseNav(); handleBrand("Puma")}}>Puma</Link>
             </div>
           </li>
           <li onClick={handleCloseNav}><Link to="/Policies">POLICIES</Link></li>
