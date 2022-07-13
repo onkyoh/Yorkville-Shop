@@ -9,7 +9,7 @@
 }
 
 body {
-  background: url("../pictures/yorkvilleBG_Dark.png");
+  background: url("../pictures/yorkvilleBG_Dark.webp");
 }
 
 .navbar {
@@ -210,7 +210,7 @@ body {
       -ms-flex-direction: column;
           flex-direction: column;
   height: calc(100vh);
-  min-height: 600px;
+  min-height: 700px;
   overflow: hidden;
   padding-top: 75px;
 }
@@ -315,9 +315,7 @@ body {
 .home .home-container .carousel ul li {
   border: #FFFBF2 2px solid;
   height: 90%;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
+  width: calc(clamp(304px, calc(40vmin + 4px ), 404px));
   cursor: pointer;
   background-color: #FFFBF2;
   -webkit-transition: -webkit-transform 0.5s ease-in-out, -webkit-box-shadow 0.25s ease-in-out;
@@ -327,7 +325,7 @@ body {
 }
 
 .home .home-container .carousel ul li img {
-  width: calc(clamp(250px, 40vmax , 400px));
+  width: calc(clamp(300px, 40vmin , 400px));
   aspect-ratio: 1/1;
 }
 
@@ -349,8 +347,10 @@ body {
 }
 
 .home .home-container .carousel ul li div p {
-  font-size: 1.7em;
-  font-size: calc(clamp(1.2em, 2vw ,1.7em));
+  font-size: calc(clamp(1.3em, 3vmin, 2em));
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .home .home-container .carousel ul li:hover {

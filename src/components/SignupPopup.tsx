@@ -1,8 +1,16 @@
 
 import { useNavigate } from "react-router-dom";
 
+interface IProps {
+  classes: {
+    navClass: string
+    burgerClass: string
+    navBarClass: string
+  }
+  setClasses: React.Dispatch<React.SetStateAction<IProps['classes']>>
+}
 
-const SignupPopup = () => {
+const SignupPopup = ({setClasses, classes}: IProps) => {
 
     const handleModal = (display: string) => {
         const modal: any = document.querySelector(".modal")
@@ -11,12 +19,23 @@ const SignupPopup = () => {
         } else {
           modal.close();
         }
+    }
+    
+    
+    const handleCloseNav = () => {
+      if ( classes.navClass === "") {
+        setClasses({
+          navClass: "hide",
+          burgerClass: "",
+          navBarClass: "navbar not-faded"
+        })
       }
+    }
 
     const navigate = useNavigate()
-
     const handlePopupClicked = () => {
-       navigate('/Login')
+      handleCloseNav()
+      navigate('/Login')
     }
 
   return (

@@ -2,14 +2,32 @@ import { Link } from "react-router-dom"
 import { signOut } from "firebase/auth";
 import { auth } from '../firebase-config';
 import { ReactComponent as Instagram } from '../icons/instagram.svg';
+import { useState } from 'react'
 
 interface IProps {
   setBrandChange:  React.Dispatch<React.SetStateAction<string>>
   currentUser: string
   setCurrentUser: React.Dispatch<React.SetStateAction<string>>
+  classes: {
+    navClass: string
+    burgerClass: string
+    navBarClass: string
+  }
+  setClasses: React.Dispatch<React.SetStateAction<IProps['classes']>>
 }
 
-const Navbar = ({setBrandChange, currentUser, setCurrentUser}: IProps) => {
+const Navbar = ({setBrandChange, currentUser, setCurrentUser, classes, setClasses}: IProps) => {
+
+  const classShow = {
+    navClass: "",
+    burgerClass: "make-x",
+    navBarClass: "navbar"
+  }
+  const classHide = {
+    navClass: "hide",
+    burgerClass: "",
+    navBarClass: "navbar not-faded"
+  }
 
   const handleBrand = (chosenBrand: string) => {
     window.localStorage.setItem('brand', chosenBrand)
@@ -33,34 +51,21 @@ const Navbar = ({setBrandChange, currentUser, setCurrentUser}: IProps) => {
   }
 
   const handleShowNav = () => {
-    var nav: HTMLElement | null =  document.querySelector("#nav-links")
-    var burger: HTMLElement | null =  document.querySelector("#burger")
-    var navBar: HTMLElement | null = document.querySelector(".navbar")
-    if (nav && burger && navBar) {
-      if ( nav.className === "") {
-        nav.className = "hide"
-        burger.className = ""
-        navBar.className = "navbar not-faded"
-      } else {
-        nav.className = ""
-        burger.className = "make-x"
-        navBar.className = "navbar"
-      }
+    if (classes.navClass === "") {
+        setClasses(classHide)
+    } else {
+        setClasses(classShow)
     }
   }
 
   const handleCloseNav = () => {
-    var nav: HTMLElement | null =  document.querySelector("#nav-links")
-    var burger: HTMLElement | null =  document.querySelector("#burger")
-    var navBar: HTMLElement | null = document.querySelector(".navbar")
-    if (nav && burger && navBar) {
-      if ( nav.className === "") {
-        nav.className = "hide"
-        burger.className = ""
-        navBar.className = "navbar not-faded"
-      }
-  }
+    if ( classes.navClass === "") {
+      setClasses(classHide)
+    }
 }
+
+
+
 
   const logout = async () => {
     await signOut(auth);
@@ -69,9 +74,9 @@ const Navbar = ({setBrandChange, currentUser, setCurrentUser}: IProps) => {
 
 
   return (
-    <nav className="navbar not-faded">
+      <nav className={classes.navBarClass}>
       <div id="logo"><Link to="/">YorkvilleShop</Link></div>
-      <ul id="nav-links" className='hide'>
+      <ul id="nav-links" className={classes.navClass}>
           <a href="https://instagram.com/yorkville.shop?igshid=YmMyMTA2M2Y=" id="instagram-container"><Instagram id="instagram"/></a>
           <li onClick={handleCloseNav}><Link to="/">HOME</Link></li>
           <li id="shop-anchor" onClick={handleShowBrands}><span id="triangle-span" className='open-span'>SHOP</span>
@@ -92,7 +97,7 @@ const Navbar = ({setBrandChange, currentUser, setCurrentUser}: IProps) => {
           <li onClick={handleCloseNav}><Link to="/Login">LOGIN</Link></li>
           } 
       </ul>
-      <div id='burger' onClick={handleShowNav}>
+      <div id='burger' className={classes.burgerClass} onClick={handleShowNav}>
         <span></span>
         <span></span>
         <span></span>

@@ -9,6 +9,13 @@ const App = () => {
 
   const [brandChange, setBrandChange] = useState("")
   const [currentUser, setCurrentUser] = useState("")
+  const classHide = {
+    navClass: "hide",
+    burgerClass: "",
+    navBarClass: "navbar not-faded"
+  }
+  const [classes, setClasses] = useState(classHide)
+
 
   useEffect(() => {
     onAuthStateChanged (auth, (retrievedUser) => {
@@ -25,8 +32,8 @@ const App = () => {
 
   return (
     <>
-      <Main brandChange={brandChange} currentUser={currentUser} setCurrentUser={setCurrentUser}/>
-      <Navbar setBrandChange={setBrandChange} currentUser={currentUser} setCurrentUser={setCurrentUser}/>
+      <Main brandChange={brandChange} currentUser={currentUser} setCurrentUser={setCurrentUser} classes={classes} setClasses={setClasses}/>
+      <Navbar setBrandChange={setBrandChange} currentUser={currentUser} setCurrentUser={setCurrentUser} classes={classes} setClasses={setClasses}/>
     </>
   );
 }

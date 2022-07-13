@@ -71,27 +71,32 @@ const handleHomeItem = async(chosenItem: string) => {
         return
       }
       var stockName: string[] = Object.keys(stock.data()!)
-      var stockImg: IShopImages[] = Object.values(stock.data()!)
+      var stockDetails: any [] = Object.values(stock.data()!)
       const idx = stockName.findIndex(name => name === chosenItem)
       if (idx > -1) {
-        setShop([{name: chosenItem, img: stockImg[idx].img}])
-        window.localStorage.setItem('item', brandsList[i])
+        const homeItem = {
+          name: chosenItem,
+          img: stockDetails[idx].img,
+          sizes: stockDetails[idx].Size
+        }
+        setShop([{...homeItem}])
+        window.localStorage.setItem('brand', brandsList[i])
       }
   }
 }
 
 const handleGetShop = async (chosenBrand: string) => {
-  let allStock: any[]= []
+  let allStock: any[] = []
   if (chosenBrand === "All") {
     const brandsList: string[] = ["Jordan", "Nike", "Adidas", "Essentials"]
     for (let i = 0; i < brandsList.length; i++) {
       const stock: DocumentSnapshot<DocumentData> | undefined = await getDoc(doc(db, 'inventory', brandsList[i]))
       if (stock.data()) {
         const stockName: string[] = Object.keys(stock.data()!)
-        const stockImg: any[] = Object.values(stock.data()!)
+        const stockDetails: any[] = Object.values(stock.data()!)
         let tempStock = []
         for (let i = 0; i < stockName.length; i++) {
-          tempStock[i] = {name: stockName[i], img: stockImg[i].img, sizes: stockImg[i].Size}
+          tempStock[i] = {name: stockName[i], img: stockDetails[i].img, sizes: stockDetails[i].Size}
         }
         allStock = [...allStock, ...tempStock]
       } else {
@@ -153,10 +158,6 @@ const handleGetShop = async (chosenBrand: string) => {
   }
 
   const handleSizeDetails = async (chosenSize: string) => {
-    if (!currentUser) {
-      setError("Please login to begin shopping.")
-      return
-    } 
     const idx: number = sizesDetail.findIndex((size: any) => size[0] === chosenSize)
     const sizeValues: any = Object.values(sizesDetail[idx])
     const tempShoe = {
@@ -176,17 +177,26 @@ const handleGetShop = async (chosenBrand: string) => {
   }
 
   const handleGetCart = async () => {
-    const usersDoc: DocumentSnapshot<DocumentData> | undefined = await getDoc(doc(db, 'users', currentUser))
+    if (currentUser) {
+      const usersDoc: DocumentSnapshot<DocumentData> | undefined = await getDoc(doc(db, 'users', currentUser))
       if (usersDoc.data() && usersDoc.data()!.cart) {
         let tempCart: ICart['cart'] = [...usersDoc.data()!.cart]
         return ([...tempCart])
       } else {
         console.log("error grabbing cart")
       }
+    } else {
+      return []
+    }
+  
   }
 
 
   const handleAddToCart = async () => {
+    if (!currentUser) {
+      setError("Login to add to cart.")
+      return
+    }
     var tempShoe = currentShoe
     const usersRef = doc(db, 'users', currentUser)
     var tempCart: Awaited<ICart['cart']> | undefined = await handleGetCart()
@@ -265,6 +275,7 @@ const handleOrderSizes = (arrayOfSizes: string[]) => {
 useEffect(() => {
   const chosenItem = window.localStorage.getItem('item') 
   const chosenBrand = window.localStorage.getItem('brand')
+  console.log(chosenItem)
   if (chosenItem) {
     handleHomeItem(chosenItem)
     window.localStorage.setItem('item', "")
@@ -273,13 +284,16 @@ useEffect(() => {
         handleGetShop(chosenBrand)
       } else {
         handleGetShop("All")
-      }
+    }
+}
+setSingleFocus(false)
+}, [brandChange])
+
+useEffect(() => {
   if (currentUser) {
     handleGetCart()
   }
-}
-setSingleFocus(false)
-}, [brandChange, currentUser])
+}, [currentUser])
 
 
  const handleOnLoad = () => {

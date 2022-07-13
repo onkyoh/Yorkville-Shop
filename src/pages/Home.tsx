@@ -9,7 +9,13 @@ import { DocumentData, DocumentSnapshot } from 'firebase/firestore'
 
 interface IProps {
   currentUser: string
-}
+  classes: {
+    navClass: string
+    burgerClass: string
+    navBarClass: string
+  }
+  setClasses: React.Dispatch<React.SetStateAction<IProps['classes']>>
+  }
 
 interface IStock {
   Shoes: IShoe[]
@@ -22,15 +28,17 @@ interface IShoe {
 }
 
 
-const Home = ({currentUser}: IProps) => {
+const Home = ({currentUser, classes, setClasses}: IProps) => {
 
-  const [popup, setPopup] = useState(false)
+ 
   const [newCarousel, setNewCarousel] = useState("0")
   const [saleCarousel, setSaleCarousel] = useState("0")
   const [popCarousel, setPopCarousel] = useState("0")
   const [newStock, setNewStock] = useState<IStock['Shoes']>([])
   const [saleStock, setSaleStock] = useState<IStock['Shoes']>([])
   const [popStock, setPopStock] = useState<IStock['Shoes']>([])
+
+  const [popup, setPopup] = useState(false)
 
   useEffect(() => {
     if (!popup) {
@@ -169,7 +177,7 @@ const Home = ({currentUser}: IProps) => {
           </section>
         </section>
       </section>
-      <SignupPop/>
+      <SignupPop classes={classes} setClasses={setClasses}/>
     </section>
   )
 }

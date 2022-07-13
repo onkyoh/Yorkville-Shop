@@ -84,7 +84,7 @@ const Cart = ({currentUser}: IProps) => {
       } else {
         tempCart[idx].quantity -= 1
       }
-      setCart([...tempCart])
+      setCart(() => [...tempCart])
       await updateDoc((doc(db, 'users', currentUser)), {
         cart: [...tempCart]
       })
@@ -112,8 +112,8 @@ const Cart = ({currentUser}: IProps) => {
         const timeFetch = await fetch("https://salty-citadel-43385.herokuapp.com/https://timeapi.io/api/Time/current/zone?timeZone=EST")
         const timeResponse = await timeFetch.json()
         const unLoad = async () => {
-        loader.className = ""
-      }
+          loader.className = ""
+        }
       await unLoad()
       return timeResponse.dateTime
     }
@@ -123,20 +123,18 @@ const Cart = ({currentUser}: IProps) => {
   }
 
   const handleInitialTotalPrice = (tempCart: IItem[]) => {
-    if (cart) {
       let calculatedPrice = 0;
-      for (let i = 0; i < cart.length; i++) {
+      for (let i = 0; i < tempCart.length; i++) {
         calculatedPrice = calculatedPrice + (tempCart[i].price * tempCart[i].quantity)
+        console.log(tempCart[i].price)
       }
       setTotalPrice(calculatedPrice)
-    }
-     
   }
 
 
   const handleTotalPrice = (tempCart: IItem[], boolean: boolean) => {
       let calculatedPrice = 0;
-      for (let i = 0; i < cart!.length; i++) {
+      for (let i = 0; i < tempCart.length; i++) {
         calculatedPrice = calculatedPrice + (tempCart[i].price * tempCart[i].quantity)
       }
       if (boolean) {
@@ -221,15 +219,21 @@ const Cart = ({currentUser}: IProps) => {
       handleInitialTotalPrice([...cart])
       setError("")
       setIsDisabled(true)
+    } else {
+      console.log("Cannot proceed to checkout with empty cart.")
     }
   }
 
   const handleShip = (boolean: boolean) => {
+    if (cart) {
     setShip(() => boolean)
-    handleTotalPrice(cart!, boolean)
+    handleTotalPrice(cart, boolean)
     setIsDisabled(false)
     setError("")
     setShipmentAddress(emptyAddress)
+  } else {
+    console.log("Cart could not be.")
+  }
   }
 
  const handleAddress = (e: React.ChangeEvent<HTMLInputElement>) => {

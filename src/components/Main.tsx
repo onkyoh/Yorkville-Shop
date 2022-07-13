@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Home from '../pages/Home';
 import Shop from '../pages/Shop';
 import Cart from '../pages/Cart';
@@ -11,15 +11,20 @@ import { Routes, Route } from 'react-router-dom';
     brandChange: string
     currentUser: string
     setCurrentUser: React.Dispatch<React.SetStateAction<string>>;
+    classes: {
+      navClass: string
+      burgerClass: string
+      navBarClass: string
+    }
+    setClasses: React.Dispatch<React.SetStateAction<IProps['classes']>>
   }
 
 
-const Main = ({brandChange, currentUser, setCurrentUser}: IProps) => {
+const Main = ({brandChange, currentUser, setCurrentUser, classes, setClasses}: IProps) => {
 
-  
   return (
     <Routes>
-      <Route path='/' element={<Home currentUser={currentUser}/>}></Route>
+      <Route path='/' element={<Home currentUser={currentUser} classes={classes} setClasses={setClasses}/>}></Route>
       <Route path='/Shop' element={<Shop brandChange={brandChange} currentUser={currentUser}/>}></Route>
       <Route path='/Cart' element={<Cart currentUser={currentUser}/>}></Route>
       <Route path='/Orders' element={<Orders currentUser={currentUser}/>}></Route>
