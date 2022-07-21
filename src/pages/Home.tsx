@@ -134,7 +134,7 @@ const Home = ({currentUser, classes, setClasses}: IProps) => {
           <section className='carousel'>
             <ul>
               {newStock.map((item: IShoe) => (
-                <li style={{transform: `translate(calc(${newCarousel} * (-100% - 25px)))`}} onClick={() => handleShoeSelection(item.Name)}>
+                <li key={item.Name} style={{transform: `translate(calc(${newCarousel} * (-100% - 25px)))`}} onClick={() => handleShoeSelection(item.Name)}>
                   <img src={item.img} alt="shoe pic"/>
                   <div><p>{item.Name}</p><p>${item.Price}</p></div>
                 </li>
@@ -150,8 +150,8 @@ const Home = ({currentUser, classes, setClasses}: IProps) => {
           </div>
           <section className='carousel'>
             <ul>
-              {saleStock.map((item: any) => (
-                <li style={{transform: `translate(calc(${saleCarousel} * (-100% - 25px)))`}} onClick={() => handleShoeSelection(item.Name)}>
+              {saleStock.map((item: IShoe) => (
+                <li key={item.Name}  style={{transform: `translate(calc(${saleCarousel} * (-100% - 25px)))`}} onClick={() => handleShoeSelection(item.Name)}>
                   <img src={item.img} alt="shoe pic"/>
                   <div><p>{item.Name}</p><p>${item.Price}</p></div>
                 </li>
@@ -167,8 +167,8 @@ const Home = ({currentUser, classes, setClasses}: IProps) => {
           </div>
           <section className='carousel'>
             <ul>
-              {popStock.map((item: any) => (
-                <li style={{transform: `translate(calc(${popCarousel} * (-100% - 25px)))`}} onClick={() => handleShoeSelection(item.Name)}>
+              {popStock.map((item: IShoe) => (
+                <li key={item.Name}  style={{transform: `translate(calc(${popCarousel} * (-100% - 25px)))`}} onClick={() => handleShoeSelection(item.Name)}>
                   <img src={item.img} alt="shoe pic"/>
                   <div><p>{item.Name}</p><p>${item.Price}</p></div>
                 </li>

@@ -129,7 +129,6 @@ const handleGetShop = async (chosenBrand: string) => {
         idx = i;
       }
     }
-  
     // turning indi shoe into array of its params => finding idx of size param 
     // => turning size param into an array of sizes 
     //and array of entries containing size + each sizes details
@@ -275,7 +274,6 @@ const handleOrderSizes = (arrayOfSizes: string[]) => {
 useEffect(() => {
   const chosenItem = window.localStorage.getItem('item') 
   const chosenBrand = window.localStorage.getItem('brand')
-  console.log(chosenItem)
   if (chosenItem) {
     handleHomeItem(chosenItem)
     window.localStorage.setItem('item', "")
@@ -294,23 +292,6 @@ useEffect(() => {
     handleGetCart()
   }
 }, [currentUser])
-
-
- const handleOnLoad = () => {
-  const options = {
-    threshold: 0.1
-  }
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-     if (entry.isIntersecting) {
-      entry.target.className = 'fade-in'
-     }})
-  }, options)
-  
-  const imgs = document.querySelectorAll("#shop-imgs")
-  imgs.forEach(img => observer.observe(img))
- }
-
 
 
 
@@ -346,7 +327,7 @@ useEffect(() => {
           :
           shop.map((item) => (
             <div key={item.name} className="item-container" onClick={() => handleShoeSelection(item.name)}>
-              <img src={item.img} id="shop-imgs" alt={item.name} onLoad={handleOnLoad}/>
+              <img src={item.img} alt={item.name} loading='lazy'/>
               <p>{item.name}</p>
             </div>
           )) 
